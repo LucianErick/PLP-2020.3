@@ -39,7 +39,7 @@ getNovoNomeDeFuncionario = do
 
 getNovaDataDeAdmissaoDoFuncionario :: IO String
 getNovoNomeDeFuncionario = do 
-   putStrLn("\nDigite um Id do novo funcionário")
+   putStrLn("\nDigite uma nova Data de admissão do novo funcionário")
    hSetBuffering stdin LineBuffering
    hSetEcho stdin True
    x <- readLn
