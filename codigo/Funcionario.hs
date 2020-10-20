@@ -23,7 +23,7 @@ getNovoNomeDeFuncionario = do
 
 getNovoSalarioDoFuncionario :: IO Double
 getNovoPesoNota = do 
-   putStrLn("\nDigite um Salário para o novofuncionário")
+   putStrLn("\nDigite um Salário para o novo funcionário")
    hSetBuffering stdin LineBuffering
    hSetEcho stdin True
    x <- readLn
@@ -45,5 +45,8 @@ getNovoNomeDeFuncionario = do
    x <- readLn
    return x
 
-
-
+EscreverArquivo :: funcionarios -> IO ()
+EscreverArquivo funcionarios = do
+               arq <- openFile "./arquivos/Funcionarios.txt" WriteMode
+               hputStrLn arq (show (funcionarios))
+               hClose arq
