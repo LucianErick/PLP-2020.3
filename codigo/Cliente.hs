@@ -1,12 +1,18 @@
+import Produto
+
+
 data Cliente = Cliente{
-    nome :: String,
+    nomeCliente :: String,
     cpf :: String,
     data_cadastro :: String,
-    compras :: [(Int, String, Float, [String], String)],
-    sintomas :: [String]
-}
-
+    compras :: [Produto],
+    sintomasCliente :: [String]
+} deriving (Show)
 
 data Clientes = Clientes{
     clientes :: [(String, Cliente)]
 }
+
+
+getProdutosCliente :: Cliente -> [Produto]
+getProdutosCliente (Cliente {compras = c}) = c
