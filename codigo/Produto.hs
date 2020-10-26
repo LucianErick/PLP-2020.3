@@ -28,6 +28,9 @@ getIdProduto (Produto {idProduto = k}) = k
 getNomeProduto :: Produto -> String
 getNomeProduto (Produto {nomeProduto = n}) = n
 
+getSintomasProduto :: Produto -> [String]
+getSintomasProduto (Produto {sintomasProduto = s}) = s
+
 
 
 getProdutoPeloNome :: String -> Produtos -> Maybe Produto
@@ -44,4 +47,15 @@ varrePeloNome nome (p:ps)
     | otherwise = varrePeloNome nome ps
 
 
-    
+
+getProdutosPorSintoma :: String -> Produtos -> [Maybe Produto]
+getProdutosPorSintoma " " (Produtos p) = [Nothing]
+getProdutosPorSintoma sintoma (Produtos p) = varrePorSintoma sintoma produtos
+    where
+        produtos = getProdutos (Produtos p)
+
+varrePorSintoma :: String -> [Produto] -> [Maybe Produto]
+varrePorSintoma sintoma [] = []
+varrePorSintoma sintoma (p:ps)
+    | elem sintoma (getSintomasProduto p) = [Just p] ++ varrePorSintoma sintoma ps
+    | otherwise = varrePorSintoma sintoma ps
