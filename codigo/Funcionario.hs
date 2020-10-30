@@ -11,6 +11,7 @@ type Data = String
 type Salario = Double
 data Funcionario = Funcionario nomeFuncionario data salario
 
+------------------------------------------------------------------------
 
 getNovoNomeDoFuncionario :: IO Double
 getNovoNomeDeFuncionario = do 
@@ -37,6 +38,7 @@ getNovoNomeDeFuncionario = do
    return x
 
 --------------------------------------------------------------------------
+
 changeNomeFuncionario :: Funcionarios -> Integer -> Integer -> String -> Funcionarios
 changeNomeFuncionario [] nomeFuncionario contador novoNomeFuncionario = []
 changeNomeFuncionario ((Funcionario nomeFuncionario Data Salario):os) nomeFuncionario contador novoNomeFuncionario
@@ -54,6 +56,15 @@ changeSalarioDoFuncionario [] nomeFuncionario contador novoSalario = []
 changeSalarioDoFuncionario ((Funcionario nomeFuncionario Data Salario):os) nomeFuncionario contador novoSalario
    | contador == nomeFuncionario = (Funcionario NomeFuncionario Data novoSalario) : changeSalarioDoFuncionario os nomeFuncionario  (contador+1) novoSalario
    | otherwise = (Funcionario NomeFuncionario Data Salario) : changeSalarioDoFuncionario os nomeFuncionario (contador+1) novoSalario
+
+---------------------------------------------------------------------------
+
+excluiFuncionario :: Funcionarios -> Integer -> Integer -> Funcionarios 
+excluiFuncionario [] _ _ = []
+excluiFuncionario (o:os) cursor contador
+   | cursor == contador = excluiFuncionario os cursor (contador+1)
+   | otherwise = o:excluiFuncionario os cursor (contador+1)
+
 
 EscreverArquivo :: funcionarios -> IO ()
 EscreverArquivo funcionarios = do
