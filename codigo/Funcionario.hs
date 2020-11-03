@@ -46,10 +46,6 @@ adicionaVendaFuncionario (Funcionario {nome = n, cpf= c, data_admissao =d, venda
     | c == cpfFuncionario = Just ([Funcionario n c d (comp++[novaVenda]) s] ++ cs)
     | otherwise = adicionaVendaFuncionario cs cpfFuncionario novaVenda
 
-
-
----------------------------------------------------------------------------
-
 excluiFuncionario :: Funcionarios -> Integer -> Integer -> Funcionarios 
 excluiFuncionario [] _ _ = []
 excluiFuncionario (o:os) cursor contador

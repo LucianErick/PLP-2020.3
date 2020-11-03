@@ -1,4 +1,4 @@
-import Venda
+import Produto
 import System.IO
 import Util
 
