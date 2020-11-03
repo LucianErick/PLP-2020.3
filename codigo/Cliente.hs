@@ -1,3 +1,5 @@
+import Produto
+
 
 import Produto
 import System.IO
@@ -5,10 +7,8 @@ import System.IO
 import Util
 
 
-
-
 data Cliente = Cliente{
-    nome :: String,
+    nomeCliente :: String,
     cpf :: String,
     data_cadastro :: String,
     compras :: [Produto],
