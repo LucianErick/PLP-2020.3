@@ -1,9 +1,5 @@
-import Produto
-
-
-import Produto
+import Venda
 import System.IO
-
 import Util
 
 
