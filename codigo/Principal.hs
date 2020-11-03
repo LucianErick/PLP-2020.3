@@ -12,23 +12,6 @@ getKey = reverse <$> getKey' ""
           more <- hReady stdin
           (if more then getKey' else return) (char:chars)
 
-opcoesTelaInicial :: [String]
-opcoesTelaInicial = ["Entrar como gestor", "Entrar como funcionário", "Entrar como cliente", "Sair"]
-
-doMainScreen :: Integer -> [Char] -> IO ()
-doMainScreen cursor action | action == "\ESC[B" = mainScreen ((cursor+1) `mod` 4)
-                                                    | action == "\ESC[A" && cursor /= 0 = mainScreen (cursor-1)
-                                                    | action == "\ESC[A" && cursor == 0 = mainScreen 3
-                                                    | action == "\ESC[C" = changeMainScreen cursor
-                                                    | action == "\ESC[D" = putStrLn("Sair")
-                                                    | otherwise = mainScreen cursor
-
-changeMainScreen :: Integer -> IO()
-changeMainScreen cursor                          | cursor == 0 = do return() 
-                                                 | cursor == 1 = do return()            
-                                                 | cursor == 2 = do return() 
-                                                 | cursor == 3 = do return()
-
 showSimpleScreen :: [String] -> Integer -> Integer -> IO()
 showSimpleScreen [] cursor contador = return ()
 showSimpleScreen (o:os) cursor contador = do
@@ -38,9 +21,28 @@ showSimpleScreen (o:os) cursor contador = do
    else
       putStrLn("  " ++ o)
    showSimpleScreen os cursor (contador+1)
+-----------------------------------------------------------------------------------------------------
 
-mainScreen :: Integer -> IO ()
-mainScreen cursor = do
+opcoesTelaInicial :: [String]
+opcoesTelaInicial = ["Entrar como gestor", "Entrar como funcionário", "Entrar como cliente", "Sair"]
+
+doTelaInicial :: Integer -> [Char] -> IO ()
+doTelaInicial cursor action | action == "\ESC[B" = telaInicial ((cursor+1) `mod` 4)
+                                                    | action == "\ESC[A" && cursor /= 0 = telaInicial (cursor-1)
+                                                    | action == "\ESC[A" && cursor == 0 = telaInicial 3
+                                                    | action == "\ESC[C" = mudarTelaInicial cursor
+                                                    | action == "\ESC[D" = putStrLn("Sair")
+                                                    | otherwise = telaInicial cursor
+
+mudarTelaInicial :: Integer -> IO()
+mudarTelaInicial cursor                          | cursor == 0 = do return() 
+                                                 | cursor == 1 = do return()            
+                                                 | cursor == 2 = do return() 
+                                                 | cursor == 3 = do return()
+
+
+telaInicial :: Integer -> IO ()
+telaInicial cursor = do
    
    system "clear"
    putStrLn("Bem-vindo à farmácia Corona Pharm!")
@@ -51,10 +53,111 @@ mainScreen cursor = do
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
    action <- getKey
-   doMainScreen cursor action
+   doTelaInicial cursor action
+
+-------------------------------------------------------------------------------------
+-- Tela do gestor
 
 opcoesTelaGestor :: [String]
 opcoesTelaGestor = ["Cadastrar produto", "Cadastrar funcionário", "Atualizar preço", "Visualizar produtos", "Visualizar clientes", "Visualizar vendas"]
+
+mudarTelaOpcoesGestor :: Produto -> Funcionario -> Cliente -> Integer -> IO ()
+mudarTelaOpcoesGestor produtos funcionarios clientes cursor
+   | cursor == 0 = telaCadastroProduto produtos
+   | cursor == 1 = telaCadastroFuncionario funcionarios
+   | cursor == 2 = telaAtualizarPreco produtos
+   | cursor == 3 = telaVisualizarProdutos produtos
+   | cursor == 4 = telaVisualizarClientes clientes
+   | cursor == 5 = telaVisualizarVendas vendas
+
+
+doOpcoesGestor :: Produto -> Funcionario -> Cliente -> Integer -> [Char] -> IO ()
+doOpcoesGestor produtos funcionarios clientes cursor action | action == "\ESC[B" = configuracoesScreen disciplinas compromissos ((cursor+1) `mod` 4)
+                                                    | action == "\ESC[A" && cursor /= 0 = configuracoesScreen disciplinas compromissos (cursor-1)
+                                                    | action == "\ESC[A" && cursor == 0 = configuracoesScreen disciplinas compromissos 3
+                                                    | action == "\ESC[C" = mudarTelaOpcoesGestor disciplinas compromissos cursor
+                                                    | action == "\ESC[D" = mainScreen disciplinas compromissos 0
+                                                    | otherwise = configuracoesScreen disciplinas compromissos cursor
+
+
+telaOpcoesGestor :: Produto -> Funcionario -> Cliente -> Integer -> IO ()
+telaOpcoesGestor produtos funcionarios clientes cursor = do
+   
+   system "clear"
+   putStrLn ("\n|| Aperte (Seta Direita) para escolher qual opcao acessar ||\n")
+   showSimpleScreen opcoesTelaGestor cursor 0
+   
+   hSetBuffering stdin NoBuffering
+   hSetEcho stdin False
+   action <- getKey
+   doOpcoesGestor disciplinas compromissos cursor action
+
+
+-- Cadastrar produto
+cadastroDisciplinaScreen :: Disciplinas -> Compromissos -> IO ()
+cadastroDisciplinaScreen disciplinas compromissos = do
+
+
+   system "clear"
+
+   nome <- getNovoNomeDisciplina
+   professor <- getNovoProfessorDisciplina
+   sala <- getNovaSalaDisciplina
+
+   putStrLn("\nA disciplina foi iniciada com o sistema de notas padrao, (!!nao se preucupe ele pode ser modificado em configuracoes!!)")
+   
+   hSetBuffering stdin NoBuffering
+   hSetEcho stdin False
+   action <- getKey
+
+   let nota = getSistemaNotasPadrao
+
+
+   configuracoesScreen (disciplinas++[(Disciplina nome professor sala nota)]) compromissos 0
+   
+   putStrLn("")
+-- Cadastrar funcionário
+
+-- Atualizar preço produto
+
+-- Visualizar Produtos
+
+-- Visualizar clientes
+
+-- Visualizar vendas
+
+
+doTelaInicial :: Integer -> [Char] -> IO ()
+doTelaInicial cursor action | action == "\ESC[B" = telaInicial ((cursor+1) `mod` 4)
+                                                    | action == "\ESC[A" && cursor /= 0 = telaInicial (cursor-1)
+                                                    | action == "\ESC[A" && cursor == 0 = telaInicial 3
+                                                    | action == "\ESC[C" = mudarTelaInicial cursor
+                                                    | action == "\ESC[D" = putStrLn("Sair")
+                                                    | otherwise = telaInicial cursor
+
+mudarTelaInicial :: Integer -> IO()
+mudarTelaInicial cursor                          | cursor == 0 = do return() 
+                                                 | cursor == 1 = do return()            
+                                                 | cursor == 2 = do return() 
+                                                 | cursor == 3 = do return()
+
+
+telaInicial :: Integer -> IO ()
+telaInicial cursor = do
+   
+   system "clear"
+   putStrLn("Bem-vindo à farmácia Corona Pharm!")
+   putStrLn("Como desejas acessar?\n")
+   putStrLn("\n|| Utilize os direcionais do teclado para mover o cursor ||\n")
+   showSimpleScreen opcoesTelaInicial cursor 0
+   
+   hSetBuffering stdin NoBuffering
+   hSetEcho stdin False
+   action <- getKey
+   doTelaInicial cursor action
+
+
+--------------------------------------------------------------------------------------
 
 opcoesTelaFuncionario :: [String]
 opcoesTelaFuncionario = ["Cadastrar cliente", "Cadastrar venda", "Visualizar clientes", "Visualizar produtos", "Visualizar lista de suas vendas"]
@@ -71,15 +174,7 @@ run = do
    where
       iniciar = do
       {
-        --  arq <- openFile "arquivos/Produtos.txt" ReadMode;
-        --  dados <- hGetLine arq;
-        --  hClose arq;
-
-        --  arq2 <- openFile "arquivos/Clientes.txt" ReadMode;
-        --  dados2 <- hGetLine arq2;
-        --  hClose arq2;
-
-         mainScreen 0;
+         telaInicial 0;
          return ()
       }
       error = ioError 
