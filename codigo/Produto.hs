@@ -1,61 +1,42 @@
-module Produto
-where
+--produto tem id, nome, preço, sintomas e data de validade
+--atualizar preço de um produto permitindo que descontos sejam aplicados
+--visualizar lista de produtos (produtos existentes no estoque e produtos de acordo com os sintomas)
 
-
-import qualified Data.Map as Map
-
-data Produto = Produto{
+data Produto = Produto {
     idProduto :: Int,
     nomeProduto :: String,
-    preco :: Float,
+    preco :: Double,
     sintomasProduto :: [String],
     validade :: String
-} deriving (Show)
+} deriving (Show, Read)
 
-
-data Produtos = Produtos{
-    produtos :: [(Int,Produto)]
-}
-
-
-getProdutos :: Produtos -> [Produto]
-getProdutos (Produtos {produtos = p}) = Map.elems $ (Map.fromList p)
-
+data Produtos = Produtos {
+    produtos :: [(Int, Produto)]
+} deriving Show
 
 getIdProduto :: Produto -> Int
-getIdProduto (Produto {idProduto = k}) = k
+getIdProduto Produto {idProduto = i} = i
 
 getNomeProduto :: Produto -> String
-getNomeProduto (Produto {nomeProduto = n}) = n
+getNomeProduto Produto {nomeProduto = n} = n
+
+getPreco :: Produto -> Double
+getPreco Produto {preco = p} = p 
 
 getSintomasProduto :: Produto -> [String]
-getSintomasProduto (Produto {sintomasProduto = s}) = s
+getSintomasProduto Produto {sintomasProduto = s} = s
 
+getValidade :: Produto -> String
+getValidade Produto {validade = v} = v
 
+produtoToString :: Produto -> String
+produtoToString Produto {idProduto = i, nomeProduto = n, preco = p, sintomasProduto = s, validade = v} = show i ++"," ++ n ++ "," ++ show p ++ "," ++ sintomasToString s ++ "," ++ v
 
-getProdutoPeloNome :: String -> Produtos -> Maybe Produto
-getProdutoPeloNome " " (Produtos p) = Nothing
-getProdutoPeloNome nome (Produtos p) = varrePeloNome nome produtos
-    where
-        produtos = getProdutos (Produtos p)
+produtosToString :: [Produto] -> String
+produtosToString [] = []
+produtosToString (p:ps) = if length ps > 0 then do "["++produtoToString p ++"]," ++ produtosToString ps
+    else do "[" ++ produtoToString p ++ "]"
 
-
-varrePeloNome :: String -> [Produto] -> Maybe Produto
-varrePeloNome nome [] = Nothing
-varrePeloNome nome (p:ps)
-    | nome == getNomeProduto p = Just p
-    | otherwise = varrePeloNome nome ps
-
-
-
-getProdutosPorSintoma :: String -> Produtos -> [Maybe Produto]
-getProdutosPorSintoma " " (Produtos p) = [Nothing]
-getProdutosPorSintoma sintoma (Produtos p) = varrePorSintoma sintoma produtos
-    where
-        produtos = getProdutos (Produtos p)
-
-varrePorSintoma :: String -> [Produto] -> [Maybe Produto]
-varrePorSintoma sintoma [] = []
-varrePorSintoma sintoma (p:ps)
-    | elem sintoma (getSintomasProduto p) = [Just p] ++ varrePorSintoma sintoma ps
-    | otherwise = varrePorSintoma sintoma ps
+sintomasToString :: [String] -> String
+sintomasToString [] = []
+sintomasToString (s:sw) = s ++ sintomasToString sw
