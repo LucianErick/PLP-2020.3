@@ -170,6 +170,29 @@ opcoesTelaCliente = ["Visualizar produtos", "Comprar produto"]
 opcoesTelaVisualizarProdutos :: [String]
 opcoesTelaVisualizarProdutos = ["Visualizar por sintoma", "Visualizar por existentes no estoque"]
 
+----------------------------------SISTEM RESET----------------------------------------
+
+resetSystemScreen :: Clientes -> Funcionarios -> Produtos -> SintomasProduto -> IO ()
+resetSystemScreen clientes funcionarios produtos sintomas = do
+   system "clear"
+   putStrLn ("CASO DESEJE RESETAR O SISTEMA APERTE (a)")
+   
+   hSetBuffering stdin LineBuffering
+   hSetEcho stdin True
+   x <- getLine
+
+   if (x == "a") then do
+      putStrLn ("SISTEMA RESETADO COM SUCESSO")
+      x <- getLine
+      configuracoesScreen [] [] 0
+      
+   else do
+      putStrLn ("SISTEMA NAO RESETADO")
+      x <- getLine
+      configuracoesScreen clientes funcionarios produtos sintomas 0
+
+------------------------------------SISTEM ON----------------------------------------
+
 run :: IO ()
 run = do
    {catch (iniciar) error;}
