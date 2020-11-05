@@ -191,7 +191,7 @@ resetSystemScreen clientes funcionarios produtos sintomas = do
       x <- getLine
       configuracoesScreen clientes funcionarios produtos sintomas 0
 
-------------------------------------SISTEM ON----------------------------------------
+------------------------------------SISTEM ON------------------------------------------
 
 run :: IO ()
 run = do
