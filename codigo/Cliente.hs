@@ -1,9 +1,5 @@
 import Produto
-
-
-import Produto
 import System.IO
-
 import Util
 
 
