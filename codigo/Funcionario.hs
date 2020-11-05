@@ -52,6 +52,11 @@ excluiFuncionario (o:os) cursor contador
    | cursor == contador = excluiFuncionario os cursor (contador+1)
    | otherwise = o:excluiFuncionario os cursor (contador+1)
 
+-------------------------------UTIL----------------------------------------
+
+formataParaEscrita :: [Funcionario] -> String
+formataParaEscrita [] = []
+formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscrita cs
 
 ---------------------------IO FUNCIONARIO-----------------------------------
 
