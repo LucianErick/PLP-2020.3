@@ -2,7 +2,9 @@
 --atualizar preço de um produto permitindo que descontos sejam aplicados
 --visualizar lista de produtos (produtos existentes no estoque e produtos de acordo com os sintomas)
 
+module Produto where
 import System.IO
+
 
 data Produto = Produto {
     idProduto :: Int,
