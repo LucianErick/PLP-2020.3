@@ -2,7 +2,9 @@
 --atualizar preço de um produto permitindo que descontos sejam aplicados
 --visualizar lista de produtos (produtos existentes no estoque e produtos de acordo com os sintomas)
 
+module Produto where
 import System.IO
+
 
 data Produto = Produto {
     idProduto :: Int,
@@ -124,6 +126,7 @@ main :: IO()
 main = do
     let p1 = Produto 1 "a" 1.0 ["b", "e"] "1/1"
     let p2 = Produto 2 "c" 2.0 ["d", "f", "g"] "1/1"
-    let p3 = [(getIdProduto p1, p1), (getIdProduto p2, p2)]
-    let p4 = Produtos p3
-    escreverArquivo p4
+    let p3 = Produto 3 "y" 2.0 ["t", "u", "v"] "2/1"
+    let p4 = [(getIdProduto p1, p1), (getIdProduto p2, p2), (getIdProduto p3, p3)]
+    let p5 = Produtos p4
+    escreverArquivo p5
