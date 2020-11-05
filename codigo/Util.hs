@@ -1,4 +1,4 @@
-  module Util where
+module Util where
 
 split :: String -> Char -> [String]
 split [] delim = [""]
