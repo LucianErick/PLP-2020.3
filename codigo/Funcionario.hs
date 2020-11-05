@@ -60,9 +60,11 @@ formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscr
 
 ---------------------------IO FUNCIONARIO-----------------------------------
 
-
-EscreverArquivo :: funcionarios -> IO ()
-EscreverArquivo funcionarios = do
-               arq <- openFile "./arquivos/Funcionarios.txt" WriteMode
-               hputStrLn arq (show (funcionarios))
-               hClose arq
+escreverArquivo :: Funcionarios -> IO ()
+escreverArquivo funcionarioss = do
+    arq <- openFile "../arquivos/Funcionarios.csv" WriteMode
+    let dataFuncionarios = getFuncionarios funcionarios
+    print "data"
+    print dataFuncionarios
+    hPutStrLn arq (formataParaEscrita dataFuncionarios)
+    hClose arq
