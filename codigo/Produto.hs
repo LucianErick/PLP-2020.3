@@ -4,7 +4,8 @@
 
 module Produto where
 import System.IO
-
+import Util
+import System.IO.Unsafe
 
 data Produto = Produto {
     idProduto :: Int,
@@ -47,6 +48,11 @@ getPreco :: Produto -> Double
 getPreco Produto {preco = p} = p 
 
 
+
+getProdutoPeloId :: Int -> [Produto] -> Maybe Produto
+getProdutoPeloId id [] = Nothing
+getProdutoPeloId id (p:ps) = if id == getIdProduto p then Just p
+    else getProdutoPeloId id ps
 
 getSintomasProduto :: Produto -> [String]
 getSintomasProduto Produto {sintomasProduto = s} = s
@@ -109,11 +115,10 @@ escreverArquivo produtos = do
     let dataSintomasProduto = getSintomasProdutos dataProdutos
     print "data"
     print dataProdutos
-    hPutStrLn arq1 (dataSintomasProduto)
-    hPutStrLn arq (formataParaEscrita dataProdutos)
+    hPutStr arq1 (dataSintomasProduto)
+    hPutStr arq (formataParaEscrita dataProdutos)
     hClose arq1
     hClose arq
-
 
 
 formataParaEscrita :: [Produto] -> String
@@ -121,12 +126,81 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
+------------------------- Visualização de Produtos -------------------------
+getProdutosEmLista :: IO [Produto]
+getProdutosEmLista = do
+    produtos <- openFile "../arquivos/Produtos.csv" ReadMode
+    listaProdutos <- lines <$> hGetContents produtos
+    return $ (converteEmLista listaProdutos)
+
+converteEmLista :: [String] -> [Produto]
+converteEmLista [] = []
+converteEmLista (produto:lista) =
+    converteEmProduto (split produto ',') : converteEmLista lista
+
+converteEmProduto :: [String] -> Produto
+converteEmProduto produto = Produto id nome preco sintomasProduto dataValidade
+    where 
+        id = (read (produto !! 0) :: Int)
+        nome = produto !! 1
+        preco = (read (produto !! 2) :: Double)
+        sintomasProduto = fromIO(getSintomasEmLista id)
+        dataValidade = produto !! 3
+
+-- Converte IO em puro
+fromIO :: IO[String] -> [String]
+fromIO x = (unsafePerformIO x :: [String])
+
+------------------------- Visualização de Sintomas -------------------------
+getSintomasEmLista :: Int -> IO [String]
+getSintomasEmLista id = do
+    sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
+    listaSintomas <- lines <$> hGetContents sintomas
+    let sintomasFinal = converteSintomasEmLista listaSintomas
+    return $ (filtraSintoma id sintomasFinal)
+
+converteSintomasEmLista :: [String] -> [[String]]
+converteSintomasEmLista [] = []
+converteSintomasEmLista (sintoma:lista) =
+    (split sintoma ',') : converteSintomasEmLista lista
+    
+filtraSintoma :: Int -> [[String]] -> [String]
+filtraSintoma _ [] = []
+filtraSintoma id (sintoma:sintomas)
+    | id == idCliente = tail sintoma
+    | otherwise = filtraSintoma id sintomas
+    where
+        idCliente = read (head sintoma) :: Int
+---------------------------------------------------------------------------
+
 
 main :: IO()
 main = do
-    let p1 = Produto 1 "a" 1.0 ["b", "e"] "1/1"
-    let p2 = Produto 2 "c" 2.0 ["d", "f", "g"] "1/1"
-    let p3 = Produto 3 "y" 2.0 ["t", "u", "v"] "2/1"
-    let p4 = [(getIdProduto p1, p1), (getIdProduto p2, p2), (getIdProduto p3, p3)]
-    let p5 = Produtos p4
-    escreverArquivo p5
+    -- let p1 = Produto 1 "a" 1.0 ["b", "e"] "1/1"
+    -- let p2 = Produto 2 "c" 2.0 ["d", "f", "g"] "1/1"
+    -- let p3 = [(getIdProduto p1, p1), (getIdProduto p2, p2)]
+    -- let p4 = Produtos p3
+    -- escreverArquivo p4
+    
+    produtos <- openFile "../arquivos/Produtos.csv" ReadMode
+    listaProdutos <- lines <$> hGetContents produtos
+    print listaProdutos
+    -- sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
+    -- listaSintomas <- lines <$> hGetContents sintomas
+    -- print (converteSintomasEmLista listaSintomas)
+    -- print (getProdutosEmLista)
+    -- print (show getProdutosEmLista)
+    -- let produto = split (head listaProdutos) ','
+    -- let id = (read (produto !! 0) :: Int)
+    -- let nome = produto !! 1
+    -- let preco = (read (produto !! 2) :: Double)
+    -- let dataValidade = produto !! 3
+    -- print (converteEmProduto (split (head listaProdutos) ','))
+    -- let x = Produto id nome preco ["pinto mole"] dataValidade
+    -- print x
+
+    -- print (read id :: Int)
+    -- print nome
+    -- print (read preco :: Double )
+    -- print dataValidade
+
