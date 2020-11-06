@@ -49,6 +49,11 @@ getPreco Produto {preco = p} = p
 
 
 
+getProdutoPeloId :: Int -> [Produto] -> Maybe Produto
+getProdutoPeloId id [] = Nothing
+getProdutoPeloId id (p:ps) = if id == getIdProduto p then Just p
+    else getProdutoPeloId id ps
+
 getSintomasProduto :: Produto -> [String]
 getSintomasProduto Produto {sintomasProduto = s} = s
 
