@@ -7,7 +7,7 @@ data Funcionario = Funcionario {
     nomeFuncionario :: String,
     cpf :: String,
     data_admissao :: String,
-    vendas :: [Venda],
+    vendas :: [String],
     salario :: Double
 } deriving (Show, Read)
 
@@ -51,6 +51,59 @@ excluiFuncionario [] _ _ = []
 excluiFuncionario (o:os) cursor contador
    | cursor == contador = excluiFuncionario os cursor (contador+1)
    | otherwise = o:excluiFuncionario os cursor (contador+1)
+
+getNomeFuncionario :: Funcionario -> String
+getNomeFuncionario Funcionario {nomeFuncionario = n} = n
+
+getDataDeAdmissao :: Funcionario -> String
+getDataDeAdmissao Funcionario {data_admissao = n} = n
+
+getVendas :: Funcionario -> [Venda]
+getVendas Funcionario {vendas = n} = n
+
+
+setSalario :: [Funcionario] -> String -> Double -> Maybe [Funcionario]
+setSalario [] x novoSalario = Nothing
+setSalario (s:cs) x novoSalario
+    | cpf == x = Just ([Funcionario x nomeFuncionario vendas dataDeAdmissao salarioNovo] ++ cs)
+    | otherwise = setSalario cs x novoSalario
+    where
+        cpfAtual = getCpf f
+        nomeFuncionarioAtual = getNomeFuncionario f
+        dataDeAdmissaoAtual = getDataDeAdmissao f
+        validadeAtual = getValidade f
+
+-----------------------------VISUALIZACAO-------------------------------
+
+getFuncionariosEmLista :: IO [Produto]
+getFuncionariosEmLista = do
+    funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
+    listaFuncionarios <- lines <$> hGetContents funcionarios
+    return $ (converteEmLista listaFuncionarios)
+
+converteEmLista :: [String] -> [Funcionario]
+converteEmLista [] = []
+converteEmLista (funcionario:lista) =
+    converteEmFuncionario (split funcionario ',') : converteEmLista lista
+
+converteEmFuncionario :: [String] -> Funcionario
+converteEmFuncionario funcionario = Funcionario nome cpf data_admissao vendas salario
+    where 
+        cpf = (read (funcionario !! 0) :: String)
+        nome = produto !! 1
+        data_admissao = (read (funcionario !! 2) :: String)
+        vendas = fromIO(getVendasEmLista id)
+        salario = produto !! 3
+
+getVendasEmLista :: Int -> IO [String]
+getVendasEmLista id = do
+    vendas <- openFile "../arquivos/Vendas.csv" ReadMode
+    listaVendas <- lines <$> hGetContents vendas
+    let vendasFinal = converteVendasEmLista listaVendas
+
+-- Converte IO em puro
+fromIO :: IO[String] -> [String]
+fromIO x = (unsafePerformIO x :: [String])
 
 -------------------------------UTIL----------------------------------------
 
