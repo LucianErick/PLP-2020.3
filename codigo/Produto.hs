@@ -121,7 +121,7 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
-
+------------------------- Visualização de Produtos -------------------------
 getProdutosEmLista :: IO [Produto]
 getProdutosEmLista = do
     produtos <- openFile "../arquivos/Produtos.csv" ReadMode
@@ -133,8 +133,6 @@ converteEmLista [] = []
 converteEmLista (produto:lista) =
     converteEmProduto (split produto ',') : converteEmLista lista
 
-
-
 converteEmProduto :: [String] -> Produto
 converteEmProduto produto = Produto id nome preco sintomasProduto dataValidade
     where 
@@ -144,11 +142,11 @@ converteEmProduto produto = Produto id nome preco sintomasProduto dataValidade
         sintomasProduto = fromIO(getSintomasEmLista id)
         dataValidade = produto !! 3
 
+-- Converte IO em puro
 fromIO :: IO[String] -> [String]
 fromIO x = (unsafePerformIO x :: [String])
 
-
-
+------------------------- Visualização de Sintomas -------------------------
 getSintomasEmLista :: Int -> IO [String]
 getSintomasEmLista id = do
     sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
@@ -156,15 +154,11 @@ getSintomasEmLista id = do
     let sintomasFinal = converteSintomasEmLista listaSintomas
     return $ (filtraSintoma id sintomasFinal)
 
-
-
 converteSintomasEmLista :: [String] -> [[String]]
 converteSintomasEmLista [] = []
 converteSintomasEmLista (sintoma:lista) =
     (split sintoma ',') : converteSintomasEmLista lista
     
-
-
 filtraSintoma :: Int -> [[String]] -> [String]
 filtraSintoma _ [] = []
 filtraSintoma id (sintoma:sintomas)
@@ -172,7 +166,7 @@ filtraSintoma id (sintoma:sintomas)
     | otherwise = filtraSintoma id sintomas
     where
         idCliente = read (head sintoma) :: Int
-
+---------------------------------------------------------------------------
 
 
 main :: IO()
