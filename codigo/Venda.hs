@@ -1,4 +1,11 @@
+module Venda(
+    Venda(Venda),
+    Vendas(Vendas)
+) where
+
 import System.IO
+import System.Directory
+import System.IO.Unsafe
 import Util
 
 data Venda = Venda {
@@ -61,10 +68,10 @@ vendaToString Venda {idVenda = id, cpfFuncionario = cpfF, cpfCliente = cpfC, dat
 -----------------------
 
 -- testes
-main :: IO()
-main = do
-    let v1 = Venda "1" "f127" "c123" "09/09" ["1","4","5"]
-    let v2 = Venda "2" "f128" "c122" "10/10" ["1","4","5"]
-    let v3 = Venda "3" "f127" "c121" "11/11" ["1","4","5"]
-    let vtuple = Vendas [(getIdVenda v1, v1), (getIdVenda v2, v2), (getIdVenda v3, v3)]
-    escreverArquivo vtuple
+-- main :: IO()
+-- main = do
+--     let v1 = Venda "1" "f127" "c123" "09/09" ["1","4","5"]
+--     let v2 = Venda "2" "f128" "c122" "10/10" ["1","4","5"]
+--     let v3 = Venda "3" "f127" "c121" "11/11" ["1","4","5"]
+--     let vtuple = Vendas [(getIdVenda v1, v1), (getIdVenda v2, v2), (getIdVenda v3, v3)]
+--     escreverArquivo vtuple

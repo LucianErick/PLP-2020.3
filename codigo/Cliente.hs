@@ -1,3 +1,9 @@
+module Cliente (
+    Cliente(Cliente),
+    Clientes(Clientes),
+    escreverArquivoCliente
+) where
+
 import Produto(getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, getProdutosEmLista,
     getSintomasProduto,
     getSintomasProdutoToString,
@@ -6,9 +12,7 @@ import Produto(getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, 
     getProdutos,
     formataParaEscrita,
     Produtos,
-    Produto(Produto)
-    )
-
+    Produto(Produto))
 import System.IO
 import Util
 import System.IO.Unsafe
@@ -90,17 +94,16 @@ getComprasClienteToString [] = []
 ---------------IO arquivo--------------------
 
 
-escreverArquivoCliente :: Clientes -> IO ()
+escreverArquivoCliente :: [Cliente] -> IO ()
 escreverArquivoCliente clientes = do
-    arq <- openFile "../arquivos/Clientes.csv" WriteMode
-    arqSintomasClientes <- openFile "../arquivos/SintomasClientes.csv" WriteMode
-    let dataClientes = getClientes clientes
-    let dataSintomasCliente = getSintomasClientesToCsv dataClientes
-    let comprasToCsv = iteraComprasClientes dataClientes
-    let sintomasToCsv = iteraSintomasProdutosClientes dataClientes
+    arq <- openFile "../arquivos/Clientes.csv" AppendMode
+    arqSintomasClientes <- openFile "../arquivos/SintomasClientes.csv" AppendMode
+    let dataSintomasCliente = getSintomasClientesToCsv clientes
+    let comprasToCsv = iteraComprasClientes clientes
+    let sintomasToCsv = iteraSintomasProdutosClientes clientes
     putStrLn comprasToCsv
     putStrLn sintomasToCsv 
-    hPutStr arq (formataParaEscritaClientes dataClientes)
+    hPutStr arq (formataParaEscritaClientes clientes)
     hPutStr arqSintomasClientes dataSintomasCliente
     escreverComprasCliente comprasToCsv sintomasToCsv
     hClose arq
