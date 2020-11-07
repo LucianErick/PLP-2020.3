@@ -37,7 +37,14 @@ getDataVenda (Venda {dataVendas = d}) = d
 -- fazer o retorno em lista de produtos talvez, acho q melhor n
 getProdutosVenda :: Venda -> [String]
 getProdutosVenda (Venda {produtos = p}) = p
------------------------
+
+getProdutosVendas :: [Venda] -> String
+getProdutosVendas [] = []
+getProdutosVendas (venda:vendas) = (getFuncionarioVenda venda) ++ "," ++ getProdutosVendaToString (getProdutosVenda venda) ++ getProdutosVendas vendas
+
+getProdutosVendaToString :: [String] -> String
+getProdutosVendaToString [] = []
+getProdutosVendaToString (produto:produtos) = if length produtos > 0 then produto ++ "," ++ getProdutosVendaToString produtos else produto ++ "\n"
 
 -- Get vendas retornando uma lista de Venda
 getVendas :: Vendas -> [Venda]
@@ -52,11 +59,15 @@ getVendasFromTuple ((_,c): cs) = c : getVendasFromTuple cs
 escreverArquivo :: Vendas -> IO ()
 escreverArquivo vendas = do
     arq <- openFile "../arquivos/Vendas.csv" WriteMode
+    arq1 <- openFile "../arquivos/ProdutosVendas.csv" WriteMode
     let listaVendas = getVendas vendas
+    let listaProdutos = getProdutosVendas listaVendas
     print "data"
     print listaVendas
     hPutStr arq (formataParaEscrita listaVendas)
+    hPutStr arq1 (listaProdutos)
     hClose arq
+    hClose arq1
 
 -- Parse pra String
 formataParaEscrita :: [Venda] -> String
@@ -64,7 +75,7 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = vendaToString c ++ "\n" ++ formataParaEscrita cs
 
 vendaToString :: Venda -> String
-vendaToString Venda {idVenda = id, cpfFuncionario = cpfF, cpfCliente = cpfC, dataVendas = d, produtos = p} = id ++ "," ++ cpfF ++ "," ++ cpfC ++ "," ++ d ++ "," ++ show p
+vendaToString Venda {idVenda = id, cpfFuncionario = cpfF, cpfCliente = cpfC, dataVendas = d} = id ++ "," ++ cpfF ++ "," ++ cpfC ++ "," ++ d
 -----------------------
 
 -- testes
