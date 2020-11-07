@@ -135,7 +135,7 @@ formataParaEscrita [] = []
 formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscrita cs
 
 getAtributosFuncionario :: Funcionario -> String
-getAtributosFuncionario (Funcionario {nomeFuncionario = n, cpfFuncionario = c, data_admissao = d, vendas = v, salario = s}) = n++ "," ++ c ++ "," ++ d ++ "," ++ "," ++ show s
+getAtributosFuncionario (Funcionario {nomeFuncionario = n, cpfFuncionario = c, data_admissao = d, vendas = v, salario = s}) = n++ "," ++ c ++ "," ++ d ++ "," ++ show s
 
 ---------------------------IO FUNCIONARIO-----------------------------------
 
