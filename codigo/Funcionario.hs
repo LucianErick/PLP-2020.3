@@ -1,7 +1,15 @@
+module Funcionario (
+    Funcionario(Funcionario),
+    Funcionarios(Funcionarios),
+    escreverArquivo,
+    getAtributosFuncionario,
+) where
+
 import System.IO
 import Util
 import Venda
-
+import System.Directory
+import System.IO.Unsafe
 
 data Funcionario = Funcionario {
     nomeFuncionario :: String,
@@ -113,11 +121,9 @@ formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscr
 
 ---------------------------IO FUNCIONARIO-----------------------------------
 
-escreverArquivo :: Funcionarios -> IO ()
-escreverArquivo funcionarioss = do
-    arq <- openFile "../arquivos/Funcionarios.csv" WriteMode
-    let dataFuncionarios = getFuncionarios funcionarios
-    print "data"
-    print dataFuncionarios
-    hPutStrLn arq (formataParaEscrita dataFuncionarios)
+escreverArquivo :: [Funcionario] -> IO ()
+escreverArquivo funcionario = do
+    arq <- openFile "../arquivos/Funcionarios.csv" AppendMode
+    print funcionario
+    hPutStrLn arq (formataParaEscrita funcionario)
     hClose arq

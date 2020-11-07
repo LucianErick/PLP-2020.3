@@ -2,8 +2,20 @@
 --atualizar preço de um produto permitindo que descontos sejam aplicados
 --visualizar lista de produtos (produtos existentes no estoque e produtos de acordo com os sintomas)
 
-module Produto where
+module Produto (getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, getProdutosEmLista,
+    getSintomasProduto,
+    getSintomasProdutoToString,
+    produtoToString,
+    getSintomasProdutos,
+    getProdutos,
+    formataParaEscrita,
+    escreverArquivo,
+    setPreco,
+    Produtos(Produtos),
+    Produto(Produto)
+) where
 import System.IO
+import System.Directory
 import Util
 import System.IO.Unsafe
 
@@ -107,16 +119,16 @@ sintomasToString (s:sw) = s ++ sintomasToString sw
 
 
 
-escreverArquivo :: Produtos -> IO ()
-escreverArquivo produtos = do
-    arq <- openFile "../arquivos/Produtos.csv" WriteMode
-    arq1 <- openFile "../arquivos/SintomasProduto.csv" WriteMode
-    let dataProdutos = getProdutos produtos
-    let dataSintomasProduto = getSintomasProdutos dataProdutos
-    print "data"
-    print dataProdutos
+escreverArquivo :: [Produto] -> IO ()
+escreverArquivo produto = do
+    arq <- openFile "../arquivos/Produtos.csv" AppendMode
+    arq1 <- openFile "../arquivos/SintomasProduto.csv" AppendMode
+    
+    print (produto) -- mudar isso, mas fazer depois
+
+    let dataSintomasProduto = getSintomasProdutos produto
     hPutStr arq1 (dataSintomasProduto)
-    hPutStr arq (formataParaEscrita dataProdutos)
+    hPutStr arq (formataParaEscrita produto)
     hClose arq1
     hClose arq
 
@@ -173,7 +185,6 @@ filtraSintoma id (sintoma:sintomas)
         idCliente = read (head sintoma) :: Int
 ---------------------------------------------------------------------------
 
-
 main :: IO()
 main = do
     -- let p1 = Produto 1 "a" 1.0 ["b", "e"] "1/1"
@@ -203,4 +214,3 @@ main = do
     -- print nome
     -- print (read preco :: Double )
     -- print dataValidade
-
