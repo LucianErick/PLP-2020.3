@@ -2,8 +2,14 @@
 --atualizar preço de um produto permitindo que descontos sejam aplicados
 --visualizar lista de produtos (produtos existentes no estoque e produtos de acordo com os sintomas)
 
-module Produto where
+module Produto (
+    Produto(Produto),
+    Produtos(Produtos)
+    getProdutosEmLista,
+    getSintomasEmLista
+) where
 import System.IO
+import System.Directory
 import Util
 import System.IO.Unsafe
 
@@ -185,6 +191,8 @@ main = do
     produtos <- openFile "../arquivos/Produtos.csv" ReadMode
     listaProdutos <- lines <$> hGetContents produtos
     print listaProdutos
+    listaProdutos2 <- getProdutosEmLista
+    print listaProdutos2
     -- sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
     -- listaSintomas <- lines <$> hGetContents sintomas
     -- print (converteSintomasEmLista listaSintomas)
