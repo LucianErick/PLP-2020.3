@@ -4,6 +4,7 @@ import System.IO.Error
 import System.Process
 import Control.Monad (when)
 import Text.Printf
+import System.IO.Unsafe
 
 -----------------------------------------------------------------------------------------------------
 import Produto
@@ -94,7 +95,7 @@ mudarTelaOpcoesGestor :: Integer -> IO ()
 mudarTelaOpcoesGestor cursor
    | cursor == 0 = cadastroProdutosTela
    | cursor == 1 = cadastroFuncionarioTela
-   | cursor == 2 = return()
+   | cursor == 2 = mudarPrecoProdutoTela
    | cursor == 3 = telaOpcoesVisualizarProdutos 0
    | cursor == 4 = return()
    | cursor == 5 = return()
@@ -190,8 +191,12 @@ cadastroFuncionarioTela = do
    -- putStrLn(" ") -- mudar isso, colocar p voltar p tela inicial
 
 -- Atualizar Preço
-mudarPrecoProdutoTela :: [Produto] -> IO () -- Falta colocar todos os parâmetros p realmente ser funcional
-mudarPrecoProdutoTela produtos = do
+
+fromIOProduto :: IO [Produto] -> [Produto]
+fromIOProduto x = (unsafePerformIO x :: [Produto])
+
+mudarPrecoProdutoTela :: IO () -- Falta colocar todos os parâmetros p realmente ser funcional
+mudarPrecoProdutoTela = do
    system "clear"
 
    putStrLn ("\nDigite o id do produto que você deseja alterar:")
@@ -199,13 +204,15 @@ mudarPrecoProdutoTela produtos = do
 
    putStrLn ("\nDigite o novo preço do produto:")
    novoPreco <- lerEntradaDouble
+
+   let listaProdutos = fromIOProduto getProdutosEmLista
+   setPreco listaProdutos idAtual novoPreco
    
-   setPreco produtos idAtual novoPreco
+   print (listaProdutos)
 
    putStrLn("\nO preço do produto foi atualizado com sucesso!\n")
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
-
 
 -- Visualizar Clientes 
 

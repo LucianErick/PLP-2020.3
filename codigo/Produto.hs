@@ -10,6 +10,7 @@ module Produto (getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista,
     getProdutos,
     formataParaEscrita,
     escreverArquivo,
+    converteEmLista,
     setPreco,
     Produtos(Produtos),
     Produto(Produto)
@@ -162,7 +163,6 @@ converteEmProduto produto = Produto id nome preco sintomasProduto dataValidade
 -- Converte IO em puro
 fromIO :: IO[String] -> [String]
 fromIO x = (unsafePerformIO x :: [String])
-
 ------------------------- Visualização de Sintomas -------------------------
 getSintomasEmLista :: Int -> IO [String]
 getSintomasEmLista id = do
