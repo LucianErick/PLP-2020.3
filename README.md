@@ -39,4 +39,5 @@ O sistema CoronaPharm foi pensado e criado em prol da facilitação da administr
 ## Observações finais
 
 - [Especificação](https://docs.google.com/document/d/1P8NjP_n2-Qjk9EnSaBIi1MFxlja27BzjLfhOb9PAoqc/edit)
+- Vídeo explicando a execução [aqui](https://youtu.be/b4z-kBS1U3Q)
 
