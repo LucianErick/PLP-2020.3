@@ -49,7 +49,7 @@ getVendas Funcionario {vendas = n} = n
 
 --------------------------- Visualização de Funcionário -------------------------------
 getFuncionariosPuros :: [Funcionario]
-getFuncionariosPuros = (unsafePerformIO getFuncionariosEmListaIO :: [Funcionario])
+getFuncionariosPuros = (unsafePerformIO getFuncionariosEmLista :: [Funcionario])
 
 -----------------------------VISUALIZACAO-------------------------------
 

@@ -12,6 +12,7 @@ module Produto (getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista,
     escreverArquivo,
     converteEmLista,
     setPreco,
+    getProdutosPuros,
     Produtos(Produtos),
     Produto(Produto)
 ) where
@@ -73,10 +74,11 @@ getValidade :: Produto -> String
 getValidade Produto {validade = v} = v
 
 
-setPreco :: [Produto] -> Int -> Double -> Maybe [Produto]
-setPreco [] x novoPreco = Nothing
+
+setPreco :: [Produto] -> Int -> Double -> [Produto]
+setPreco [] x novoPreco = []
 setPreco (c:cs) x novoPreco
-    | idAtual == x = Just ([Produto x nomeProdutoAtual novoPreco sintomasProdutoAtual validadeAtual] ++ cs)
+    | idAtual == x = ([Produto x nomeProdutoAtual novoPreco sintomasProdutoAtual validadeAtual] ++ cs)
     | otherwise = setPreco cs x novoPreco
     where
         idAtual = getIdProduto c
@@ -114,8 +116,8 @@ escreverArquivo produto = do
     let dataSintomasProduto = getSintomasProdutos produto
     hPutStr arq1 (dataSintomasProduto)
     hPutStr arq (formataParaEscrita produto)
-    hClose arq1
     hClose arq
+    hClose arq1
 
 
 formataParaEscrita :: [Produto] -> String
@@ -123,12 +125,15 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
-------------------------- Visualização de Produtos-------------------------
+------------------------- Visualização de Produtos -------------------------
+getProdutosPuros :: [Produto]
+getProdutosPuros = (unsafePerformIO getProdutosEmLista :: [Produto])
 
 getProdutosEmLista :: IO [Produto]
 getProdutosEmLista = do
     produtos <- openFile "../arquivos/Produtos.csv" ReadMode
     listaProdutos <- lines <$> hGetContents produtos
+    hClose produtos
     return $ (converteEmLista listaProdutos)
 
 converteEmLista :: [String] -> [Produto]
@@ -156,6 +161,7 @@ getSintomasEmLista id = do
     sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
     listaSintomas <- lines <$> hGetContents sintomas
     let sintomasFinal = converteSintomasEmLista listaSintomas
+    hClose sintomas
     return $ (filtraSintoma id sintomasFinal)
 
 converteSintomasEmLista :: [String] -> [[String]]
@@ -170,20 +176,18 @@ filtraSintoma id (sintoma:sintomas)
     | otherwise = filtraSintoma id sintomas
     where
         idCliente = read (head sintoma) :: Int
+---------------------------------------------------------------------------
 
-------------------------------MAIN----------------------------------
-
-main :: IO()
-main = do
+-- main :: IO()
+-- main = do
     -- let p1 = Produto 1 "a" 1.0 ["b", "e"] "1/1"
     -- let p2 = Produto 2 "c" 2.0 ["d", "f", "g"] "1/1"
     -- let p3 = [(getIdProduto p1, p1), (getIdProduto p2, p2)]
     -- let p4 = Produtos p3
     -- escreverArquivo p4
-    
-    produtos <- openFile "../arquivos/Produtos.csv" ReadMode
-    listaProdutos <- lines <$> hGetContents produtos
-    print listaProdutos
+    -- produtos <- openFile "../arquivos/Produtos.csv" ReadMode
+    -- listaProdutos <- lines <$> hGetContents produtos
+    -- print listaProdutos
     -- sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
     -- listaSintomas <- lines <$> hGetContents sintomas
     -- print (converteSintomasEmLista listaSintomas)
