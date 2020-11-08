@@ -1,6 +1,7 @@
 module Venda(
     Venda(Venda),
-    Vendas(Vendas)
+    Vendas(Vendas),
+    escreverArquivoVendas
 ) where
 
 import System.IO
@@ -56,15 +57,13 @@ getVendasFromTuple ((_,c): cs) = c : getVendasFromTuple cs
 -----------------------
 
 -- Salvando o arquivo
-escreverArquivo :: Vendas -> IO ()
-escreverArquivo vendas = do
-    arq <- openFile "../arquivos/Vendas.csv" WriteMode
-    arq1 <- openFile "../arquivos/ProdutosVendas.csv" WriteMode
-    let listaVendas = getVendas vendas
-    let listaProdutos = getProdutosVendas listaVendas
-    print "data"
-    print listaVendas
-    hPutStr arq (formataParaEscrita listaVendas)
+escreverArquivoVendas :: [Venda] -> IO ()
+escreverArquivoVendas vendas = do
+    arq <- openFile "../arquivos/Vendas.csv" AppendMode
+    arq1 <- openFile "../arquivos/ProdutosVendas.csv" AppendMode
+    let listaProdutos = getProdutosVendas vendas
+    print vendas
+    hPutStr arq (formataParaEscrita vendas)
     hPutStr arq1 (listaProdutos)
     hClose arq
     hClose arq1
@@ -85,4 +84,4 @@ vendaToString Venda {idVenda = id, cpfFuncionario = cpfF, cpfCliente = cpfC, dat
 --     let v2 = Venda "2" "f128" "c122" "10/10" ["1","4","5"]
 --     let v3 = Venda "3" "f127" "c121" "11/11" ["1","4","5"]
 --     let vtuple = Vendas [(getIdVenda v1, v1), (getIdVenda v2, v2), (getIdVenda v3, v3)]
---     escreverArquivo vtuple
+--     escreverArquivoVendas vtuple

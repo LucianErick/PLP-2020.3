@@ -1,3 +1,10 @@
+module Funcionario (
+    Funcionario(Funcionario),
+    Funcionarios(Funcionarios),
+    escreverArquivoFuncionario
+
+) where
+
 import System.IO
 import Util
 import System.IO.Unsafe
@@ -115,13 +122,11 @@ adicionaVendaDeFuncionario (Funcionario {nomeFuncionario = n, cpfFuncionario = c
     | otherwise = adicionaVendaDeFuncionario funcionarios cpf idVenda (aux ++ [Funcionario n c d v s])
 
 ---------------------------IO FUNCIONARIO-----------------------------------
-escreverArquivo :: Funcionarios -> IO ()
-escreverArquivo funcionarios = do
-    arq <- openFile "../arquivos/Funcionarios.csv" WriteMode
-    let dataFuncionarios = getFuncionarios funcionarios
-    print "data"
-    print dataFuncionarios
-    hPutStr arq (formataParaEscrita dataFuncionarios)
+escreverArquivoFuncionario :: [Funcionario] -> IO ()
+escreverArquivoFuncionario funcionarios = do
+    arq <- openFile "../arquivos/Funcionarios.csv" AppendMode
+    print funcionarios
+    hPutStr arq (formataParaEscrita funcionarios)
     hClose arq
 
 getFuncionarios :: Funcionarios -> [Funcionario]
@@ -137,23 +142,23 @@ formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscr
 --------------------------------------
 
 -- testes
-main :: IO()
-main = do
-    let f1 = Funcionario "leo" "f127" "09/09" [] 777.0
-    let f2 = Funcionario "eduardo" "f321" "10/10" [] 888.0
-    let f3 = Funcionario "biden" "f22" "07/11" [] 1.0
-    let f4 = Funcionarios (mapeiaFuncionarioPorCpf [f1,f2,f3])
-    escreverArquivo f4
-    print "^^^^ funcionarios cadastrados ^^^^"
-    let funcionarios = getFuncionariosPuros
-    print funcionarios
-    print "^^^^ funcionarios resgatados do arquivo ^^^^"
+-- main :: IO()
+-- main = do
+--     let f1 = Funcionario "leo" "f127" "09/09" [] 777.0
+--     let f2 = Funcionario "eduardo" "f321" "10/10" [] 888.0
+--     let f3 = Funcionario "biden" "f22" "07/11" [] 1.0
+--     let f4 = Funcionarios (mapeiaFuncionarioPorCpf [f1,f2,f3])
+--     escreverArquivoFuncionario f4
+--     print "^^^^ funcionarios cadastrados ^^^^"
+--     let funcionarios = getFuncionariosPuros
+--     print funcionarios
+--     print "^^^^ funcionarios resgatados do arquivo ^^^^"
 
-    -- vendas <- openFile "../arquivos/Vendas.csv" ReadMode
-    -- listaVendas <- lines <$> hGetContents vendas
-    -- let vendasFinal = converteVendasEmLista listaVendas
-    -- let vendasFiltradas = filtraVenda "f127" vendasFinal
-    -- print vendasFiltradas
-    -- funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
-    -- listaFuncionarios <- lines <$> hGetContents funcionarios
-    -- print listaFuncionarios
+--     -- vendas <- openFile "../arquivos/Vendas.csv" ReadMode
+--     -- listaVendas <- lines <$> hGetContents vendas
+--     -- let vendasFinal = converteVendasEmLista listaVendas
+--     -- let vendasFiltradas = filtraVenda "f127" vendasFinal
+--     -- print vendasFiltradas
+--     -- funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
+--     -- listaFuncionarios <- lines <$> hGetContents funcionarios
+--     -- print listaFuncionarios
