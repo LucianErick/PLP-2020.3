@@ -176,33 +176,4 @@ filtraSintoma id (sintoma:sintomas)
     | otherwise = filtraSintoma id sintomas
     where
         idCliente = read (head sintoma) :: Int
----------------------------------------------------------------------------
-
--- main :: IO()
--- main = do
-    -- let p1 = Produto 1 "a" 1.0 ["b", "e"] "1/1"
-    -- let p2 = Produto 2 "c" 2.0 ["d", "f", "g"] "1/1"
-    -- let p3 = [(getIdProduto p1, p1), (getIdProduto p2, p2)]
-    -- let p4 = Produtos p3
-    -- escreverArquivo p4
-    -- produtos <- openFile "../arquivos/Produtos.csv" ReadMode
-    -- listaProdutos <- lines <$> hGetContents produtos
-    -- print listaProdutos
-    -- sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
-    -- listaSintomas <- lines <$> hGetContents sintomas
-    -- print (converteSintomasEmLista listaSintomas)
-    -- print (getProdutosEmLista)
-    -- print (show getProdutosEmLista)
-    -- let produto = split (head listaProdutos) ','
-    -- let id = (read (produto !! 0) :: Int)
-    -- let nome = produto !! 1
-    -- let preco = (read (produto !! 2) :: Double)
-    -- let dataValidade = produto !! 3
-    -- print (converteEmProduto (split (head listaProdutos) ','))
-    -- let x = Produto id nome preco ["pinto mole"] dataValidade
-    -- print x
-
-    -- print (read id :: Int)
-    -- print nome
-    -- print (read preco :: Double )
-    -- print dataValidade
+---------------------------------------------------------------------------------------

@@ -251,33 +251,4 @@ formataCompras :: String -> [String] -> String
 formataCompras cpf [] = []
 formataCompras cpf (c:cs) = if length cs > 0 then cpf ++ "," ++ c ++ "\n" ++ formataCompras cpf cs
     else cpf ++ "," ++ c
------------------------------MAIN------------------------------
-
-
-main :: IO()
-main = do
-    -- let prod = Produto 0 "dipirona" 3.50 ["Dor de cabeca"] "20/12"
-    -- let prod1 = Produto 1 "dorflex" 4.50 ["Dor muscular"] "20/12"
-    -- let prod2 = Produto 2 "rivotril" 15.0 ["ansiedade"] "25/12"
-    -- let cli = Cliente "Edu" "149" "31/10" [prod, prod1] ["dor de cabeca"]
-    -- let cli1 = Cliente "Edu2" "159" "31/10" [prod, prod1] []
-
-    print (formataExibicaoCliente (quebraCliente "Olá, sou, luciano"))
-    -- --contents <- readFile "../arquivos/Clientes.csv"
-
-    -- let clis = Clientes[(getCpf cli, cli)]
-    -- let novaLista = getClientes clis ++ [cli1]
-    -- let clis1 = Clientes (mapeiaCpf novaLista)
-    -- --print clis1
-    -- --escreverArquivo clis1
-
-    -- let att = adicionaProdutoCliente (getClientes clis1) "149" prod2
-    -- let clis2 = Clientes (mapeiaCpf (removeJustMaybeList att))
-    -- escreverArquivoCliente clis2
-
-    -- x <- getClientesEmLista
-    -- print x
-
-
-    --print (split contents '\n')
-    --print (length (split contents '\n'))
+----------------------------------------------------------------------------------------------------
