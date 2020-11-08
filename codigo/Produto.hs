@@ -35,32 +35,23 @@ data Produtos = Produtos {
 } deriving Show
 
 
+----------------------------PRODUTOGetters--------------------
 
 getProdutos :: Produtos -> [Produto]
 getProdutos (Produtos {produtos = p}) = getProdutosFromTuple p
-
-
 
 getProdutosFromTuple :: [(Int, Produto)] -> [Produto]
 getProdutosFromTuple [] = []
 getProdutosFromTuple ((_,c): cs) = c : getProdutosFromTuple cs
 
-
-
 getIdProduto :: Produto -> Int
 getIdProduto Produto {idProduto = i} = i
-
-
 
 getNomeProduto :: Produto -> String
 getNomeProduto Produto {nomeProduto = n} = n
 
-
-
 getPreco :: Produto -> Double
 getPreco Produto {preco = p} = p 
-
-
 
 getProdutoPeloId :: Int -> [Produto] -> Maybe Produto
 getProdutoPeloId id [] = Nothing
@@ -70,23 +61,16 @@ getProdutoPeloId id (p:ps) = if id == getIdProduto p then Just p
 getSintomasProduto :: Produto -> [String]
 getSintomasProduto Produto {sintomasProduto = s} = s
 
-
-
 getSintomasProdutos :: [Produto] -> String
 getSintomasProdutos [] = []
 getSintomasProdutos (c:cs) = show (getIdProduto c) ++ "," ++ getSintomasProdutoToString (getSintomasProduto c) ++ getSintomasProdutos cs
-
-
 
 getSintomasProdutoToString :: [String] -> String
 getSintomasProdutoToString [] = []
 getSintomasProdutoToString (c:cs) = if length cs > 0 then c ++ "," ++ getSintomasProdutoToString cs else c ++ "\n"
 
-
-
 getValidade :: Produto -> String
 getValidade Produto {validade = v} = v
-
 
 
 setPreco :: [Produto] -> Int -> Double -> Maybe [Produto]
@@ -118,7 +102,7 @@ sintomasToString :: [String] -> String
 sintomasToString [] = []
 sintomasToString (s:sw) = s ++ sintomasToString sw
 
-
+-----------------------------IOProduto---------------------------------
 
 escreverArquivo :: [Produto] -> IO ()
 escreverArquivo produto = do
@@ -139,7 +123,8 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
-------------------------- Visualização de Produtos -------------------------
+------------------------- Visualização de Produtos-------------------------
+
 getProdutosEmLista :: IO [Produto]
 getProdutosEmLista = do
     produtos <- openFile "../arquivos/Produtos.csv" ReadMode
@@ -163,7 +148,9 @@ converteEmProduto produto = Produto id nome preco sintomasProduto dataValidade
 -- Converte IO em puro
 fromIO :: IO[String] -> [String]
 fromIO x = (unsafePerformIO x :: [String])
+
 ------------------------- Visualização de Sintomas -------------------------
+
 getSintomasEmLista :: Int -> IO [String]
 getSintomasEmLista id = do
     sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
@@ -183,7 +170,8 @@ filtraSintoma id (sintoma:sintomas)
     | otherwise = filtraSintoma id sintomas
     where
         idCliente = read (head sintoma) :: Int
----------------------------------------------------------------------------
+
+------------------------------MAIN----------------------------------
 
 main :: IO()
 main = do

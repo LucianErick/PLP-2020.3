@@ -51,8 +51,10 @@ getVendas Funcionario {vendas = n} = n
 getFuncionariosPuros :: [Funcionario]
 getFuncionariosPuros = (unsafePerformIO getFuncionariosEmListaIO :: [Funcionario])
 
-getFuncionariosEmListaIO :: IO [Funcionario]
-getFuncionariosEmListaIO = do
+-----------------------------VISUALIZACAO-------------------------------
+
+getFuncionariosEmLista :: IO [Funcionario]
+getFuncionariosEmLista = do
     funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
     listaFuncionarios <- lines <$> hGetContents funcionarios
     return $ (converteEmLista listaFuncionarios)
@@ -97,6 +99,7 @@ filtraVenda cpf (venda:vendas)
         cpfFuncionario = venda !! 1
 
 -------------------------------UTIL----------------------------------------
+
 excluiFuncionario :: [Funcionario] -> String -> [Funcionario] -> [Funcionario] 
 excluiFuncionario [] cpf [] = []
 excluiFuncionario (funcionario:funcionarios) cpf aux
