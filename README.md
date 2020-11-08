@@ -4,8 +4,8 @@
 
 - [O que é CoronaPharm?](#o-que-é-o-coronapharm)
 - [Configurando o ambiente](#configuração-do-ambiente)
+- [Execução](#execução)
 - [Observações finais](#observações-finais)
-
 
 ## O que é o CoronaPharm
 
@@ -18,9 +18,17 @@ O sistema CoronaPharm foi pensado e criado em prol da facilitação da administr
 
 - Instalações mínimas : apenas GHC (o compilador) e ferramentas de compilação (principalmente Cabal e Stack) são instalados globalmente em seu sistema, usando o gerenciador de pacotes do sistema.
 
-     # [Ubuntu](https://www.haskell.org/downloads/linux/) 
+     - [Ubuntu](https://www.haskell.org/downloads/linux/) 
     
 - Se você utiliza outro sistema (Linux/Unix, Windows ou MacOS), [clique neste link](https://www.haskell.org/downloads/), apesar de não garatirmos um bom funcionamento.
+
+## Execução
+
+- Para uma fácil execução, basta só digitar na linha de comando na pasta do projeto
+
+     ```
+     runhaskell Principal.hs
+     ```
 
 ## Observações finais
 
