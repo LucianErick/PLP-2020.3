@@ -1,7 +1,10 @@
 module Cliente (
     Cliente(Cliente),
     Clientes(Clientes),
-    escreverArquivoCliente
+    escreverArquivoCliente,
+    getClientesEmLista,
+    quebraCliente,
+    formataExibicaoCliente
 ) where
 
 import Produto(getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, getProdutosEmLista,
@@ -208,6 +211,9 @@ lerSintomasClientes = do
     return  conteudo
 
 
+--formataVisualizacaoClientes :: String -> String
+
+
 --------util-------
 
 filtraSintomaCliente :: String -> [[String]] -> [String]
@@ -233,6 +239,13 @@ converteComprasEmLista [] = []
 converteComprasEmLista (sintoma:lista) =
     (split sintoma ',') : converteComprasEmLista lista
 
+
+quebraCliente :: String -> [String]
+quebraCliente entrada = split entrada ','
+
+formataExibicaoCliente :: [String] -> String
+formataExibicaoCliente lista = "Nome: " ++ (lista !! 0) ++ " | cpf:" ++ (lista !! 1) ++ " | data de cadastro:" ++ (lista !! 2)
+
 ----------------------------
 
 
@@ -243,7 +256,8 @@ main = do
     -- let prod2 = Produto 2 "rivotril" 15.0 ["ansiedade"] "25/12"
     -- let cli = Cliente "Edu" "149" "31/10" [prod, prod1] ["dor de cabeca"]
     -- let cli1 = Cliente "Edu2" "159" "31/10" [prod, prod1] []
-    print "Lendo"
+
+    print (formataExibicaoCliente (quebraCliente "Olá, sou, luciano"))
     -- --contents <- readFile "../arquivos/Clientes.csv"
 
     -- let clis = Clientes[(getCpf cli, cli)]
@@ -256,8 +270,8 @@ main = do
     -- let clis2 = Clientes (mapeiaCpf (removeJustMaybeList att))
     -- escreverArquivoCliente clis2
 
-    x <- getClientesEmLista
-    print x
+    -- x <- getClientesEmLista
+    -- print x
 
 
     --print (split contents '\n')
