@@ -4,7 +4,8 @@ module Cliente (
     escreverArquivoCliente,
     getClientesEmLista,
     quebraCliente,
-    formataExibicaoCliente
+    formataExibicaoCliente,
+    escreverComprasCliente
 ) where
 
 import Produto(getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, getProdutosEmLista,
@@ -138,8 +139,8 @@ iteraFormatoSintomas cpf (s:ss) = cpf ++ "," ++ getSintomasProdutoToString sinto
 
 escreverComprasCliente :: String -> String -> IO ()
 escreverComprasCliente produtos sintomas = do
-    arq <- openFile "../arquivos/ComprasClientes.csv" WriteMode
-    arq1 <- openFile "../arquivos/SintomasProdutosClientes.csv" WriteMode
+    arq <- openFile "../arquivos/ComprasClientes.csv" AppendMode
+    arq1 <- openFile "../arquivos/SintomasProdutosClientes.csv" AppendMode
 
     hPutStr arq (produtos)
     hPutStr arq1 (sintomas)
@@ -210,8 +211,6 @@ lerSintomasClientes = do
     conteudo <- lines <$> hGetContents arq
     return  conteudo
 
-
---formataVisualizacaoClientes :: String -> String
 
 
 --------util-------

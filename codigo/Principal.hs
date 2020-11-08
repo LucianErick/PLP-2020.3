@@ -120,7 +120,6 @@ telaOpcoesGestor cursor = do
    action <- getKey
    doOpcoesGestor cursor action
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Cadastrar produto
 cadastroProdutosTela :: IO ()
 cadastroProdutosTela = do
@@ -158,7 +157,6 @@ cadastroProdutosTela = do
    telaInicial 0
 
 -- Cadastrar funcionario
-
 listaVendasInicialFuncionario:: [String]
 listaVendasInicialFuncionario = []
 
@@ -193,15 +191,7 @@ cadastroFuncionarioTela = do
    putStrLn (" ")
    telaInicial 0
 
-
-
-
-
-
-
-
 -- Atualizar Preço
-
 fromIOProduto :: IO [Produto] -> [Produto]
 fromIOProduto x = (unsafePerformIO x :: [Produto])
 
@@ -216,7 +206,7 @@ mudarPrecoProdutoTela = do
    novoPreco <- lerEntradaDouble
 
    -- let listaProdutos = fromIOProduto getProdutosEmLista
-   -- setPreco listaProdutos idAtual novoPreco
+   --return setPreco listaProdutos idAtual novoPreco
    
    -- print (listaProdutos)
 
@@ -224,14 +214,7 @@ mudarPrecoProdutoTela = do
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
 
-
-
-
-
-
-
 -- Visualizar Clientes
-
 visualizarClientesTela :: IO ()
 visualizarClientesTela = do
       system "clear"
@@ -244,13 +227,7 @@ visualizarClientesTela = do
       telaInicial 0
 
 
--- iterarListaClientes :: [String] -> [String]
--- iterarListaClientes [] = return ()
--- iterarListaClientes lista (x:xs) =
-
-
 -- Visualizar vendas
-
 visualizarVendasTela :: IO ()
 visualizarVendasTela = do
       system "clear"
@@ -263,40 +240,25 @@ visualizarVendasTela = do
       telaInicial 0
 
 --------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
 --Tela funcionario
 
 opcoesTelaFuncionario :: [String]
-opcoesTelaFuncionario = ["Cadastrar cliente", "Cadastrar venda", "Visualizar clientes", "Visualizar produtos", "Visualizar lista de suas vendas"]
+opcoesTelaFuncionario = ["Cadastrar cliente", "Cadastrar venda", "Visualizar clientes", "Visualizar produtos"]
 
 mudarTelaOpcoesFuncionario :: Integer -> IO ()
 mudarTelaOpcoesFuncionario cursor
-   | cursor == 0 = cadastroClienteTela--
-   | cursor == 1 = cadastroVendaTela--
-   | cursor == 2 = return()--
-   | cursor == 3 = telaOpcoesVisualizarProdutos 0--
-   | cursor == 4 = return()--
+   | cursor == 0 = cadastroClienteTela
+   | cursor == 1 = cadastroVendaTela
+   | cursor == 2 = visualizarClientesTela
+   | cursor == 3 = telaOpcoesVisualizarProdutos 0
 
--- Ajeitar isso, nao sei se funciona normalmente se colocar uma opcao a mais
 doOpcoesFuncionario :: Integer -> [Char] -> IO ()
-doOpcoesFuncionario cursor action | action == "\ESC[B" = telaOpcoesFuncionario ((cursor+1) `mod` 5)
+doOpcoesFuncionario cursor action | action == "\ESC[B" = telaOpcoesFuncionario ((cursor+1) `mod` 4)
                                                     | action == "\ESC[A" && cursor /= 0 = telaOpcoesFuncionario (cursor-1)
-                                                    | action == "\ESC[A" && cursor == 0 = telaOpcoesFuncionario 4
+                                                    | action == "\ESC[A" && cursor == 0 = telaOpcoesFuncionario 3
                                                     | action == "\ESC[C" = mudarTelaOpcoesFuncionario cursor
                                                     | action == "\ESC[D" = telaInicial 0
                                                     | otherwise = telaOpcoesFuncionario cursor
-
 
 telaOpcoesFuncionario :: Integer -> IO ()
 telaOpcoesFuncionario cursor = do
@@ -309,20 +271,11 @@ telaOpcoesFuncionario cursor = do
    action <- getKey
    doOpcoesFuncionario cursor action
 
-
-
-
-
-
-
-
-
 -- Cadastrar Cliente
 listaComprasInicialCliente:: [Produto]
 listaComprasInicialCliente = []
 
-
-cadastroClienteTela :: IO () -- Falta colocar todos os parâmetros p realmente ser funcional
+cadastroClienteTela :: IO ()
 cadastroClienteTela = do
    system "clear"
 
@@ -385,27 +338,11 @@ cadastroVendaTela = do
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
    
-
-
    action <- getKey
    putStrLn(" ")
    telaInicial 0
 
--- Visualizar Clientes
--- Visualizar Lista de Suas vendas
-
 -------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
 -- Tela cliente
 
 opcoesTelaCliente :: [String]
@@ -414,7 +351,7 @@ opcoesTelaCliente = ["Visualizar produtos", "Comprar produto"]
 mudarTelaOpcoesCliente :: Integer -> IO ()
 mudarTelaOpcoesCliente cursor
    | cursor == 0 = telaOpcoesVisualizarProdutos 0--
-   | cursor == 1 = return()--
+   | cursor == 1 = comprarProdutoTela--
 
 -- Ajeitar isso, nao sei se funciona normalmente se colocar uma opcao a mais
 doOpcoesCliente :: Integer -> [Char] -> IO ()
@@ -424,7 +361,6 @@ doOpcoesCliente cursor action | action == "\ESC[B" = telaOpcoesCliente ((cursor+
                                                     | action == "\ESC[C" = mudarTelaOpcoesCliente cursor
                                                     | action == "\ESC[D" = telaInicial 0
                                                     | otherwise = telaOpcoesCliente cursor
-
 
 telaOpcoesCliente :: Integer -> IO ()
 telaOpcoesCliente cursor = do
@@ -439,6 +375,30 @@ telaOpcoesCliente cursor = do
 
 -- Comprar produto
 
+comprarProdutoTela :: IO ()
+comprarProdutoTela = do
+   system "clear"
+
+   putStrLn ("Digite os ids dos produtos (separados por vírgula):")
+   produtos <- lerEntradaString
+   
+   putStrLn ("\nDigite os sintomas (separados por vírgula):")
+   sintomas <- lerEntradaString -- tem que ajeitar isso
+
+   putStrLn("\nA compra foi cadastrada com sucesso! Volte sempre!\n")
+
+   escreverComprasCliente produtos sintomas
+   
+   hSetBuffering stdin NoBuffering
+   hSetEcho stdin False
+   
+   action <- getKey
+   putStrLn(" ")
+   telaInicial 0
+
+
+
+
 -----------------------------------------------------------------------------------------------------------
 -- Tela visualizar produtos
 
@@ -447,8 +407,8 @@ opcoesTelaVisualizarProdutos = ["Visualizar por sintoma", "Visualizar por existe
 
 mudarTelaOpcoesVisualizarProdutos :: Integer -> IO ()
 mudarTelaOpcoesVisualizarProdutos cursor
-   | cursor == 0 = return()--
-   | cursor == 1 = return()--
+   | cursor == 0 = visualizarProdutosEstoqueTela--
+   | cursor == 1 = visualizarProdutosSintomasTela--
 
 doOpcoesVisualizarProdutos :: Integer -> [Char] -> IO ()
 doOpcoesVisualizarProdutos cursor action | action == "\ESC[B" = telaOpcoesVisualizarProdutos ((cursor+1) `mod` 2)
@@ -469,6 +429,34 @@ telaOpcoesVisualizarProdutos cursor = do
    hSetEcho stdin False
    action <- getKey
    doOpcoesVisualizarProdutos cursor action
+
+-- Visualizar produtos pelo estoque
+visualizarProdutosEstoqueTela :: IO ()
+visualizarProdutosEstoqueTela = do
+      system "clear"
+      
+      produtos <- openFile "../arquivos/Produtos.csv" ReadMode
+      
+      listaProdutos <- lines <$> hGetContents produtos
+      print (produtos)
+
+      action <- getKey
+      putStrLn (" ")
+      telaInicial 0
+
+
+-- Visualizar produtos pelos sintomas
+visualizarProdutosSintomasTela :: IO ()
+visualizarProdutosSintomasTela = do
+      system "clear"
+      produtos <- openFile "../arquivos/SintomasProduto.csv" ReadMode
+      listaProdutos <- lines <$> hGetContents produtos
+      print (produtos)
+      
+      action <- getKey
+      putStrLn (" ")
+      telaInicial 0
+
 -----------------------------------------------------------------------------------------------------------
 
 doTelaSair :: String -> IO ()
