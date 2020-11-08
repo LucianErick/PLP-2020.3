@@ -7,13 +7,13 @@ import Control.Monad (when)
 import Text.Printf
 import System.IO.Unsafe
 
------------------------------------------------------------------------------------------------------
+--------------------------------------------IMPORTS DAS ENTIDADES-------------------------------------
 import Produto
 import Funcionario
 import Cliente
 import Venda
 import Util
------------------------------------------------------------------------------------------------------
+---------------------------------------------METODOS AUXILIARES---------------------------------------
 
 getKey :: IO [Char]
 getKey = reverse <$> getKey' ""
@@ -52,7 +52,7 @@ lerEntradaDouble = do
          hSetEcho stdin True
          x <- readLn
          return x
------------------------------------------------------------------------------------------------------
+------------------------------------------------TELA INICIAL-----------------------------------------------
 
 opcoesTelaInicial :: [String]
 opcoesTelaInicial = ["Entrar como gestor", "Entrar como funcionário", "Entrar como cliente", "Sair"]
@@ -86,8 +86,7 @@ telaInicial cursor = do
    action <- getKey
    doTelaInicial cursor action
 
--------------------------------------------------------------------------------------
--- Tela do gestor
+-------------------------------------------------TELA GESTOR-----------------------------------------
 
 opcoesTelaGestor :: [String]
 opcoesTelaGestor = ["Cadastrar produto", "Cadastrar funcionário", "Visualizar produtos", "Visualizar clientes", "Visualizar vendas"]
@@ -203,7 +202,6 @@ visualizarClientesTela = do
       putStrLn (" ")
       telaInicial 0
 
-
 -- Visualizar vendas
 visualizarVendasTela :: IO ()
 visualizarVendasTela = do
@@ -216,8 +214,7 @@ visualizarVendasTela = do
       putStrLn (" ")
       telaInicial 0
 
---------------------------------------------------------------------------------------
---Tela funcionario
+-----------------------------------------------TELA FUNCIONÁRIO---------------------------------------------
 
 opcoesTelaFuncionario :: [String]
 opcoesTelaFuncionario = ["Cadastrar cliente", "Cadastrar venda", "Visualizar clientes", "Visualizar produtos"]
@@ -318,8 +315,7 @@ cadastroVendaTela = do
    putStrLn(" ")
    telaInicial 0
 
--------------------------------------------------------------------------------------------------------
--- Tela cliente
+-----------------------------------------------TELA CLIENTE------------------------------------------
 
 opcoesTelaCliente :: [String]
 opcoesTelaCliente = ["Visualizar produtos", "Comprar produto"]
@@ -349,7 +345,6 @@ telaOpcoesCliente cursor = do
    doOpcoesCliente cursor action
 
 -- Comprar produto
-
 comprarProdutoTela :: IO ()
 comprarProdutoTela = do
    system "clear"
@@ -372,8 +367,7 @@ comprarProdutoTela = do
    putStrLn(" ")
    telaInicial 0
 
------------------------------------------------------------------------------------------------------------
--- Tela visualizar produtos
+--------------------------------------------TELA VISUALIZAR PRODUTOS-----------------------------------
 
 opcoesTelaVisualizarProdutos :: [String]
 opcoesTelaVisualizarProdutos = ["Visualizar por sintoma", "Visualizar por existentes no estoque"]
@@ -430,7 +424,7 @@ visualizarProdutosSintomasTela = do
       putStrLn (" ")
       telaInicial 0
 
------------------------------------------------------------------------------------------------------------
+----------------------------------------------TELA SAIR------------------------------------------------
 -- Tela de sair
 doTelaSair :: String -> IO ()
 doTelaSair action    | action == "s" = return() 
@@ -446,7 +440,7 @@ telaSair = do
    action <- getKey
    doTelaSair action
 
------------------------------------------------------------------------------------------------------------
+----------------------------------------------EXECUTAR--------------------------------------------------
 run :: IO ()
 run = do
    {catch (iniciar) error;}

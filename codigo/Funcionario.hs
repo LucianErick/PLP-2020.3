@@ -142,26 +142,4 @@ getFuncionariosFromTuple ((_,f): cs) = f : getFuncionariosFromTuple cs
 formataParaEscrita :: [Funcionario] -> String
 formataParaEscrita [] = []
 formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscrita cs
---------------------------------------
-
--- testes
--- main :: IO()
--- main = do
---     let f1 = Funcionario "leo" "f127" "09/09" [] 777.0
---     let f2 = Funcionario "eduardo" "f321" "10/10" [] 888.0
---     let f3 = Funcionario "biden" "f22" "07/11" [] 1.0
---     let f4 = Funcionarios (mapeiaFuncionarioPorCpf [f1,f2,f3])
---     escreverArquivoFuncionario f4
---     print "^^^^ funcionarios cadastrados ^^^^"
---     let funcionarios = getFuncionariosPuros
---     print funcionarios
---     print "^^^^ funcionarios resgatados do arquivo ^^^^"
-
---     -- vendas <- openFile "../arquivos/Vendas.csv" ReadMode
---     -- listaVendas <- lines <$> hGetContents vendas
---     -- let vendasFinal = converteVendasEmLista listaVendas
---     -- let vendasFiltradas = filtraVenda "f127" vendasFinal
---     -- print vendasFiltradas
---     -- funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
---     -- listaFuncionarios <- lines <$> hGetContents funcionarios
---     -- print listaFuncionarios
+-----------------------------------------------------------------------------------------
