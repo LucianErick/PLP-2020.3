@@ -75,7 +75,7 @@ setSalario (s:cs) x novoSalario
 
 -----------------------------VISUALIZACAO-------------------------------
 
-getFuncionariosEmLista :: IO [Produto]
+getFuncionariosEmLista :: IO [Funcionario]
 getFuncionariosEmLista = do
     funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
     listaFuncionarios <- lines <$> hGetContents funcionarios
