@@ -73,9 +73,10 @@ getValidade :: Produto -> String
 getValidade Produto {validade = v} = v
 
 
-setPrecoProduto :: [Produto] -> Int -> Double -> Maybe [Produto]
-setPrecoProduto [] x novoPreco = Nothing
-setPrecoProduto (c:cs) x novoPreco
+
+setPreco :: [Produto] -> Int -> Double -> Maybe [Produto]
+setPreco [] x novoPreco = Nothing
+setPreco (c:cs) x novoPreco
     | idAtual == x = Just ([Produto x nomeProdutoAtual novoPreco sintomasProdutoAtual validadeAtual] ++ cs)
     | otherwise = setPrecoProduto cs x novoPreco
     where
@@ -123,7 +124,9 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
-------------------------- Visualização de Produtos-------------------------
+------------------------- Visualização de Produtos -------------------------
+getProdutosPuros :: [Produto]
+getProdutosPuros = (unsafePerformIO getProdutosEmLista :: [Produto])
 
 getProdutosEmLista :: IO [Produto]
 getProdutosEmLista = do

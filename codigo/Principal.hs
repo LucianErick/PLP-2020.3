@@ -1,4 +1,5 @@
 import System.IO 
+import System.IO.Unsafe
 import Control.Exception
 import System.IO.Error 
 import System.Process
@@ -192,9 +193,6 @@ cadastroFuncionarioTela = do
    telaInicial 0
 
 -- Atualizar Preço
-fromIOProduto :: IO [Produto] -> [Produto]
-fromIOProduto x = (unsafePerformIO x :: [Produto])
-
 mudarPrecoProdutoTela :: IO () -- Falta colocar todos os parâmetros p realmente ser funcional
 mudarPrecoProdutoTela = do
    system "clear"
@@ -208,7 +206,7 @@ mudarPrecoProdutoTela = do
    -- let listaProdutos = fromIOProduto getProdutosEmLista
    -- setPrecoProduto listaProdutos idAtual novoPreco
    
-   -- print (listaProdutos)
+   let produtosNovo = setPreco produtos idAtual novoPreco
 
    putStrLn("\nO preço do produto foi atualizado com sucesso!\n")
    hSetBuffering stdin NoBuffering
