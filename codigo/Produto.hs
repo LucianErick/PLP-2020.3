@@ -2,8 +2,21 @@
 --atualizar preço de um produto permitindo que descontos sejam aplicados
 --visualizar lista de produtos (produtos existentes no estoque e produtos de acordo com os sintomas)
 
-module Produto where
+module Produto (getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, getProdutosEmLista,
+    getSintomasProduto,
+    getSintomasProdutoToString,
+    produtoToString,
+    getSintomasProdutos,
+    getProdutos,
+    formataParaEscrita,
+    escreverArquivo,
+    converteEmLista,
+    setPreco,
+    Produtos(Produtos),
+    Produto(Produto)
+) where
 import System.IO
+import System.Directory
 import Util
 import System.IO.Unsafe
 
@@ -22,53 +35,42 @@ data Produtos = Produtos {
 } deriving Show
 
 
+----------------------------PRODUTOGetters--------------------
 
 getProdutos :: Produtos -> [Produto]
 getProdutos (Produtos {produtos = p}) = getProdutosFromTuple p
-
-
 
 getProdutosFromTuple :: [(Int, Produto)] -> [Produto]
 getProdutosFromTuple [] = []
 getProdutosFromTuple ((_,c): cs) = c : getProdutosFromTuple cs
 
-
-
 getIdProduto :: Produto -> Int
 getIdProduto Produto {idProduto = i} = i
-
-
 
 getNomeProduto :: Produto -> String
 getNomeProduto Produto {nomeProduto = n} = n
 
-
-
 getPreco :: Produto -> Double
 getPreco Produto {preco = p} = p 
 
-
+getProdutoPeloId :: Int -> [Produto] -> Maybe Produto
+getProdutoPeloId id [] = Nothing
+getProdutoPeloId id (p:ps) = if id == getIdProduto p then Just p
+    else getProdutoPeloId id ps
 
 getSintomasProduto :: Produto -> [String]
 getSintomasProduto Produto {sintomasProduto = s} = s
-
-
 
 getSintomasProdutos :: [Produto] -> String
 getSintomasProdutos [] = []
 getSintomasProdutos (c:cs) = show (getIdProduto c) ++ "," ++ getSintomasProdutoToString (getSintomasProduto c) ++ getSintomasProdutos cs
 
-
-
 getSintomasProdutoToString :: [String] -> String
 getSintomasProdutoToString [] = []
 getSintomasProdutoToString (c:cs) = if length cs > 0 then c ++ "," ++ getSintomasProdutoToString cs else c ++ "\n"
 
-
-
 getValidade :: Produto -> String
 getValidade Produto {validade = v} = v
-
 
 
 setPreco :: [Produto] -> Int -> Double -> Maybe [Produto]
@@ -100,18 +102,18 @@ sintomasToString :: [String] -> String
 sintomasToString [] = []
 sintomasToString (s:sw) = s ++ sintomasToString sw
 
+-----------------------------IOProduto---------------------------------
 
+escreverArquivo :: [Produto] -> IO ()
+escreverArquivo produto = do
+    arq <- openFile "../arquivos/Produtos.csv" AppendMode
+    arq1 <- openFile "../arquivos/SintomasProduto.csv" AppendMode
+    
+    print (produto) -- mudar isso, mas fazer depois
 
-escreverArquivo :: Produtos -> IO ()
-escreverArquivo produtos = do
-    arq <- openFile "../arquivos/Produtos.csv" WriteMode
-    arq1 <- openFile "../arquivos/SintomasProduto.csv" WriteMode
-    let dataProdutos = getProdutos produtos
-    let dataSintomasProduto = getSintomasProdutos dataProdutos
-    print "data"
-    print dataProdutos
+    let dataSintomasProduto = getSintomasProdutos produto
     hPutStr arq1 (dataSintomasProduto)
-    hPutStr arq (formataParaEscrita dataProdutos)
+    hPutStr arq (formataParaEscrita produto)
     hClose arq1
     hClose arq
 
@@ -121,7 +123,8 @@ formataParaEscrita [] = []
 formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
-------------------------- Visualização de Produtos -------------------------
+------------------------- Visualização de Produtos-------------------------
+
 getProdutosEmLista :: IO [Produto]
 getProdutosEmLista = do
     produtos <- openFile "../arquivos/Produtos.csv" ReadMode
@@ -147,6 +150,7 @@ fromIO :: IO[String] -> [String]
 fromIO x = (unsafePerformIO x :: [String])
 
 ------------------------- Visualização de Sintomas -------------------------
+
 getSintomasEmLista :: Int -> IO [String]
 getSintomasEmLista id = do
     sintomas <- openFile "../arquivos/SintomasProduto.csv" ReadMode
@@ -166,8 +170,8 @@ filtraSintoma id (sintoma:sintomas)
     | otherwise = filtraSintoma id sintomas
     where
         idCliente = read (head sintoma) :: Int
----------------------------------------------------------------------------
 
+------------------------------MAIN----------------------------------
 
 main :: IO()
 main = do
@@ -198,4 +202,3 @@ main = do
     -- print nome
     -- print (read preco :: Double )
     -- print dataValidade
-
