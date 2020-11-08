@@ -3,9 +3,10 @@ module Cliente (
     Clientes(Clientes),
     escreverArquivoCliente,
     getClientesEmLista,
-    quebraCliente,
-    formataExibicaoCliente,
-    escreverComprasCliente
+    escreverComprasCliente,
+    iteraComprasClientes,
+    iteraSintomasProdutosClientes,
+    escreverApenasComprasCliente
 ) where
 
 import Produto(getProdutoPeloId, getIdProduto, fromIO, converteSintomasEmLista, getProdutosEmLista,
@@ -103,13 +104,8 @@ escreverArquivoCliente clientes = do
     arq <- openFile "../arquivos/Clientes.csv" AppendMode
     arqSintomasClientes <- openFile "../arquivos/SintomasClientes.csv" AppendMode
     let dataSintomasCliente = getSintomasClientesToCsv clientes
-    let comprasToCsv = iteraComprasClientes clientes
-    let sintomasToCsv = iteraSintomasProdutosClientes clientes
-    putStrLn comprasToCsv
-    putStrLn sintomasToCsv 
     hPutStr arq (formataParaEscritaClientes clientes)
     hPutStr arqSintomasClientes dataSintomasCliente
-    escreverComprasCliente comprasToCsv sintomasToCsv
     hClose arq
     hClose arqSintomasClientes
 
@@ -244,6 +240,17 @@ quebraCliente entrada = split entrada ','
 formataExibicaoCliente :: [String] -> String
 formataExibicaoCliente lista = "Nome: " ++ (lista !! 0) ++ " | cpf:" ++ (lista !! 1) ++ " | data de cadastro:" ++ (lista !! 2)
 
+escreverApenasComprasCliente :: String -> [String] -> IO()
+escreverApenasComprasCliente idCliente produtos = do
+    arq <- openFile "../arquivos/ComprasClientes.csv" AppendMode
+    let compras = formataCompras idCliente produtos
+    hPutStrLn arq compras
+    return() 
+
+formataCompras :: String -> [String] -> String
+formataCompras cpf [] = []
+formataCompras cpf (c:cs) = if length cs > 0 then cpf ++ "," ++ c ++ "\n" ++ formataCompras cpf cs
+    else cpf ++ "," ++ c
 -----------------------------MAIN------------------------------
 
 

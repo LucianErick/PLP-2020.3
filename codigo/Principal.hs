@@ -90,21 +90,20 @@ telaInicial cursor = do
 -- Tela do gestor
 
 opcoesTelaGestor :: [String]
-opcoesTelaGestor = ["Cadastrar produto", "Cadastrar funcionário", "Atualizar preço", "Visualizar produtos", "Visualizar clientes", "Visualizar vendas"]
+opcoesTelaGestor = ["Cadastrar produto", "Cadastrar funcionário", "Visualizar produtos", "Visualizar clientes", "Visualizar vendas"]
 
 mudarTelaOpcoesGestor :: Integer -> IO ()
 mudarTelaOpcoesGestor cursor
    | cursor == 0 = cadastroProdutosTela
    | cursor == 1 = cadastroFuncionarioTela
-   | cursor == 2 = mudarPrecoProdutoTela
-   | cursor == 3 = telaOpcoesVisualizarProdutos 0
-   | cursor == 4 = visualizarClientesTela
-   | cursor == 5 = visualizarVendasTela
+   | cursor == 2 = telaOpcoesVisualizarProdutos 0
+   | cursor == 3 = visualizarClientesTela
+   | cursor == 4 = visualizarVendasTela
 
 doOpcoesGestor :: Integer -> [Char] -> IO ()
-doOpcoesGestor cursor action | action == "\ESC[B" = telaOpcoesGestor ((cursor+1) `mod` 6)
+doOpcoesGestor cursor action | action == "\ESC[B" = telaOpcoesGestor ((cursor+1) `mod` 5)
                                                     | action == "\ESC[A" && cursor /= 0 = telaOpcoesGestor (cursor-1)
-                                                    | action == "\ESC[A" && cursor == 0 = telaOpcoesGestor 5
+                                                    | action == "\ESC[A" && cursor == 0 = telaOpcoesGestor 4
                                                     | action == "\ESC[C" = mudarTelaOpcoesGestor cursor
                                                     | action == "\ESC[D" = telaInicial 0
                                                     | otherwise = telaOpcoesGestor cursor
@@ -129,13 +128,13 @@ cadastroProdutosTela = do
    putStrLn ("Digite o id do produto:")
    id <- lerEntradaInt
 
-   putStrLn ("\nDigite o nome do produto:")
+   putStrLn ("\nDigite o nome do produto: (Sem caracteres especiais)")
    nome <- lerEntradaString
 
    putStrLn ("\nDigite o preço do produto:")
    preco <- lerEntradaDouble
 
-   putStrLn ("\nDigite os sintomas do produto (separados por ','):")
+   putStrLn ("\nDigite os sintomas do produto (separados por ',' e sem caracteres especiais):")
    sintomas <- lerEntradaString
    let listaSintomas = split sintomas ','
 
@@ -148,7 +147,7 @@ cadastroProdutosTela = do
    let adicionarProduto = listaProdutos
    escreverArquivo adicionarProduto
    
-   putStrLn("\nO produto foi cadastrado com sucesso!\n(Mas não se preocupe, ele pode ser modificado futuramente!)")
+   putStrLn("\nO produto foi cadastrado com sucesso!\n")
    
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
@@ -165,19 +164,19 @@ cadastroFuncionarioTela :: IO ()
 cadastroFuncionarioTela = do
    system "clear"
 
-   putStrLn ("Digite o nome do funcionário:")
+   putStrLn ("Digite o nome do funcionário: (Sem caracteres especiais)")
    nomeFuncionario <- lerEntradaString
 
-   putStrLn ("\nDigite o cpf do funcionário:")
+   putStrLn ("\nDigite o cpf do funcionário: (Apenas números)")
    cpfFuncionario <- lerEntradaString
 
    putStrLn ("\nDigite a data de admissão do funcionário (usando '/'):")
    dataAdmissao <- lerEntradaString
 
-   putStrLn ("\nDigite o salário do funcionário:")
+   putStrLn ("\nDigite o salário do funcionário: (Apenas numeros)")
    salario <- lerEntradaDouble
 
-   putStrLn("\nO funcionário foi cadastrado com sucesso!\n(Mas não se preocupe, ele pode ser modificado futuramente!)\n")
+   putStrLn("\nO funcionário foi cadastrado com sucesso!\n")
    
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
@@ -191,26 +190,6 @@ cadastroFuncionarioTela = do
    action <- getKey
    putStrLn (" ")
    telaInicial 0
-
--- Atualizar Preço
-mudarPrecoProdutoTela :: IO () -- Falta colocar todos os parâmetros p realmente ser funcional
-mudarPrecoProdutoTela = do
-   system "clear"
-
-   putStrLn ("\nDigite o id do produto que você deseja alterar:")
-   idAtual <- lerEntradaInt
-
-   putStrLn ("\nDigite o novo preço do produto:")
-   novoPreco <- lerEntradaDouble
-
-   -- let listaProdutos = fromIOProduto getProdutosEmLista
-   -- setPrecoProduto listaProdutos idAtual novoPreco
-   
-   let produtosNovo = setPreco produtos idAtual novoPreco
-
-   putStrLn("\nO preço do produto foi atualizado com sucesso!\n")
-   hSetBuffering stdin NoBuffering
-   hSetEcho stdin False
 
 -- Visualizar Clientes
 visualizarClientesTela :: IO ()
@@ -277,20 +256,20 @@ cadastroClienteTela :: IO ()
 cadastroClienteTela = do
    system "clear"
 
-   putStrLn ("Digite o nome do cliente:")
+   putStrLn ("Digite o nome do cliente: (Sem caracteres especiais)")
    nomeCliente <- lerEntradaString
 
-   putStrLn ("\nDigite o cpf do cliente:")
-   cpfCliente <- lerEntradaString -- tem que ajeitar isso
+   putStrLn ("\nDigite o cpf do cliente: (Apenas números)")
+   cpfCliente <- lerEntradaString 
 
    putStrLn ("\nDigite a data de cadastro do cliente (usando '/'):")
    dataCadastro <- lerEntradaString
 
-   putStrLn ("\nDigite os sintomas do cliente:")
+   putStrLn ("\nDigite os sintomas do cliente: (Sem caracteres especiais)")
    sintomasCliente <- lerEntradaString
    let listaSintomasCliente = split sintomasCliente ','
 
-   putStrLn("\nO cliente foi cadastrado com sucesso!\n(Mas não se preocupe, ele pode ser modificado futuramente!)")
+   putStrLn("\nO cliente foi cadastrado com sucesso!\n")
    
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
@@ -305,24 +284,23 @@ cadastroClienteTela = do
    telaInicial 0
 
 -- Cadastrar Venda
-
-cadastroVendaTela :: IO () -- Falta colocar todos os parâmetros p realmente ser funcional
+cadastroVendaTela :: IO ()
 cadastroVendaTela = do
    system "clear"
 
    putStrLn ("Digite o id da venda:")
    idVenda <- lerEntradaString
 
-   putStrLn ("\nDigite o cpf do cliente:")
-   cpfCliente <- lerEntradaString -- tem que ajeitar isso
+   putStrLn ("\nDigite o cpf do cliente: (Apenas números e que *esteja cadastrado*)")
+   cpfCliente <- lerEntradaString
    
-   putStrLn ("\nDigite o cpf do funcionário:")
-   cpfFuncionario <- lerEntradaString -- tem que ajeitar isso
+   putStrLn ("\nDigite o cpf do funcionário: (Apenas números)")
+   cpfFuncionario <- lerEntradaString 
 
    putStrLn ("\nDigite a data de cadastro da venda (usando '/'):")
    dataVenda <- lerEntradaString
 
-   putStrLn ("\nDigite os ids dos produtos (separados por ','):")
+   putStrLn ("\nDigite os ids dos produtos (separados por ',' e apenas números):")
    produtosVendidos <- lerEntradaString
    let listaProdutos = split produtosVendidos ','
 
@@ -351,7 +329,6 @@ mudarTelaOpcoesCliente cursor
    | cursor == 0 = telaOpcoesVisualizarProdutos 0--
    | cursor == 1 = comprarProdutoTela--
 
--- Ajeitar isso, nao sei se funciona normalmente se colocar uma opcao a mais
 doOpcoesCliente :: Integer -> [Char] -> IO ()
 doOpcoesCliente cursor action | action == "\ESC[B" = telaOpcoesCliente ((cursor+1) `mod` 2)
                                                     | action == "\ESC[A" && cursor /= 0 = telaOpcoesCliente (cursor-1)
@@ -377,15 +354,16 @@ comprarProdutoTela :: IO ()
 comprarProdutoTela = do
    system "clear"
 
-   putStrLn ("Digite os ids dos produtos (separados por vírgula):")
+   putStrLn ("Digite os ids dos produtos (separados por vírgula e apenas números):")
    produtos <- lerEntradaString
+   let listaProdutos = split produtos ','
    
-   putStrLn ("\nDigite os sintomas (separados por vírgula):")
-   sintomas <- lerEntradaString -- tem que ajeitar isso
+   putStrLn ("\nDigite o cpf do cliente: (Apenas números)")
+   cpf <- lerEntradaString
 
    putStrLn("\nA compra foi cadastrada com sucesso! Volte sempre!\n")
 
-   escreverComprasCliente produtos sintomas
+   escreverApenasComprasCliente cpf listaProdutos
    
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
@@ -393,9 +371,6 @@ comprarProdutoTela = do
    action <- getKey
    putStrLn(" ")
    telaInicial 0
-
-
-
 
 -----------------------------------------------------------------------------------------------------------
 -- Tela visualizar produtos
@@ -405,8 +380,9 @@ opcoesTelaVisualizarProdutos = ["Visualizar por sintoma", "Visualizar por existe
 
 mudarTelaOpcoesVisualizarProdutos :: Integer -> IO ()
 mudarTelaOpcoesVisualizarProdutos cursor
-   | cursor == 0 = visualizarProdutosEstoqueTela--
-   | cursor == 1 = visualizarProdutosSintomasTela--
+   | cursor == 0 = visualizarProdutosSintomasTela
+   | cursor == 1 = visualizarProdutosEstoqueTela
+   
 
 doOpcoesVisualizarProdutos :: Integer -> [Char] -> IO ()
 doOpcoesVisualizarProdutos cursor action | action == "\ESC[B" = telaOpcoesVisualizarProdutos ((cursor+1) `mod` 2)
@@ -442,7 +418,6 @@ visualizarProdutosEstoqueTela = do
       putStrLn (" ")
       telaInicial 0
 
-
 -- Visualizar produtos pelos sintomas
 visualizarProdutosSintomasTela :: IO ()
 visualizarProdutosSintomasTela = do
@@ -456,7 +431,7 @@ visualizarProdutosSintomasTela = do
       telaInicial 0
 
 -----------------------------------------------------------------------------------------------------------
-
+-- Tela de sair
 doTelaSair :: String -> IO ()
 doTelaSair action    | action == "s" = return() 
                      | otherwise = telaInicial 0
@@ -464,7 +439,7 @@ doTelaSair action    | action == "s" = return()
 telaSair :: IO ()
 telaSair = do
    system "clear"
-   putStrLn("Digite (s) para encerrar a execucao ou (Outra tecla) para voltar para o menu");
+   putStrLn("Digite (s) para encerrar a execução ou (Outra tecla) para voltar para o menu");
    
    hSetBuffering stdin NoBuffering
    hSetEcho stdin False
