@@ -9,7 +9,7 @@
 
 ## O que é o CoronaPharm
 
-O sistema CoronaPharm foi pensado e criado em prol da facilitação da administração das farmácias em tempos de crise pandemica ou até mesmo em tempos comuns visando assim, sobretudo, a organização tanto do gestor da empresa quanto dos funcionários. Tendo isso em mente, tende a ser uma maneira eficaz de controle de mercadoria para o cliente, para o funcionário e ainda mais pro gestor, que terá controle completo do que a empresa tem sem grandes procupações
+O sistema CoronaPharm foi pensado e criado em prol da facilitação da administração das farmácias em tempos de crise pandemica ou até mesmo em tempos comuns visando assim, sobretudo, a organização tanto do gestor da empresa quanto dos funcionários. Tendo isso em mente, tende a ser uma maneira eficaz de controle de mercadoria para o cliente, para o funcionário e ainda mais pro gestor, que terá controle completo do que a empresa tem sem grandes preocupações.
 
 
 ## Configuração do ambiente
@@ -24,7 +24,7 @@ O sistema CoronaPharm foi pensado e criado em prol da facilitação da administr
 
 ## Execução
 
-- Para uma fácil execução, basta só digitar na linha de comando na pasta do projeto
+- Para uma fácil execução, basta só digitar esse comando no terminal na pasta do projeto.
 
      ```
      runhaskell Principal.hs
