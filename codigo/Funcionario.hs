@@ -1,90 +1,51 @@
-module Funcionario (
-    Funcionario(Funcionario),
-    Funcionarios(Funcionarios),
-    escreverArquivo,
-    getAtributosFuncionario,
-) where
-
 import System.IO
 import Util
-import Venda
-import System.Directory
 import System.IO.Unsafe
 
+-- funcionário deve ser cadastrado com a lista de vendas vazias, e então usar métodos 
+-- pra adicionar as vendas dele
 data Funcionario = Funcionario {
     nomeFuncionario :: String,
-    cpf :: String,
-    data_admissao :: String,
+    cpfFuncionario :: String,
+    dataAdmissao :: String,
     vendas :: [String],
     salario :: Double
 } deriving (Show, Read)
-
 
 data Funcionarios = Funcionarios{
     funcionarios :: [(String, Funcionario)]
 } deriving Show
  
----------------------------FUNCIONARIO------------------------------------
+--------------------------- Funcionário ------------------------------------
 
-getAtributosFuncionario :: Funcionario -> String
-getAtributosFuncionario (Funcionario {nome = n, cpf = c, data_admissao = d, vendas = com, salario = s}) = n++","++c ++","++d ++","++ show(produtosToString com) ++ "," ++ show s
+-- já implementado em Venda.hs
+-- getId :: Venda -> Int
+-- getId (Venda {idVenda = i}) = i
 
-getId :: Venda -> Int
-getId (Venda {idVenda = i}) = i
-
-getCpf :: Funcionario -> String
-getCpf Funcionario {cpf = c} = c
-
-getFuncionarios :: Funcionarios -> [Funcionario]
-getFuncionarios (Funcionarios {funcionarios = f}) = getFuncionariosFromTuple f
+mapeiaFuncionarioPorCpf :: [Funcionario] -> [(String, Funcionario)]
+mapeiaFuncionarioPorCpf [] = []
+mapeiaFuncionarioPorCpf (f:fLista)= (getCpfFuncionario f, f) : mapeiaFuncionarioPorCpf fLista
 
 
-getFuncionariosFromTuple :: [(String, Funcionario)] -> [Funcionario]
-getFuncionariosFromTuple [] = []
-getFuncionariosFromTuple ((_,f): cs) = f : getFuncionariosFromTuple cs
-
-mapeiaCpf :: [Funcionario] -> [(String, Funcionario)]
-mapeiaCpf [] = []
-mapeiaCpf (f:cs)= (getCpf f, f) : mapeiaCpf cs
-
-
-adicionaVendaFuncionario :: [Funcionario] -> String -> Venda -> Maybe [Funcionario]
-adicionaVendaFuncionario [] cpfFuncionario novaVenda = Nothing
-adicionaVendaFuncionario (Funcionario {nome = n, cpf= c, data_admissao =d, vendas =vend, salario=s}:cs) cpfFuncionario novaVenda
-    | c == cpfFuncionario = Just ([Funcionario n c d (comp++[novaVenda]) s] ++ cs)
-    | otherwise = adicionaVendaFuncionario cs cpfFuncionario novaVenda
-
-excluiFuncionario :: Funcionarios -> Integer -> Integer -> Funcionarios 
-excluiFuncionario [] _ _ = []
-excluiFuncionario (o:os) cursor contador
-   | cursor == contador = excluiFuncionario os cursor (contador+1)
-   | otherwise = o:excluiFuncionario os cursor (contador+1)
+getCpfFuncionario :: Funcionario -> String
+getCpfFuncionario Funcionario {cpfFuncionario = c} = c
 
 getNomeFuncionario :: Funcionario -> String
 getNomeFuncionario Funcionario {nomeFuncionario = n} = n
 
-getDataDeAdmissao :: Funcionario -> String
-getDataDeAdmissao Funcionario {data_admissao = n} = n
+getDataAdmissao :: Funcionario -> String
+getDataAdmissao Funcionario {dataAdmissao = n} = n
 
-getVendas :: Funcionario -> [Venda]
+getVendas :: Funcionario -> [String]
 getVendas Funcionario {vendas = n} = n
 
 
-setSalario :: [Funcionario] -> String -> Double -> Maybe [Funcionario]
-setSalario [] x novoSalario = Nothing
-setSalario (s:cs) x novoSalario
-    | cpf == x = Just ([Funcionario x nomeFuncionario vendas dataDeAdmissao salarioNovo] ++ cs)
-    | otherwise = setSalario cs x novoSalario
-    where
-        cpfAtual = getCpf f
-        nomeFuncionarioAtual = getNomeFuncionario f
-        dataDeAdmissaoAtual = getDataDeAdmissao f
-        validadeAtual = getValidade f
+--------------------------- Visualização de Funcionário -------------------------------
+getFuncionariosPuros :: [Funcionario]
+getFuncionariosPuros = (unsafePerformIO getFuncionariosEmListaIO :: [Funcionario])
 
------------------------------VISUALIZACAO-------------------------------
-
-getFuncionariosEmLista :: IO [Produto]
-getFuncionariosEmLista = do
+getFuncionariosEmListaIO :: IO [Funcionario]
+getFuncionariosEmListaIO = do
     funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
     listaFuncionarios <- lines <$> hGetContents funcionarios
     return $ (converteEmLista listaFuncionarios)
@@ -95,35 +56,104 @@ converteEmLista (funcionario:lista) =
     converteEmFuncionario (split funcionario ',') : converteEmLista lista
 
 converteEmFuncionario :: [String] -> Funcionario
-converteEmFuncionario funcionario = Funcionario nome cpf data_admissao vendas salario
+converteEmFuncionario funcionario = Funcionario nome cpfFuncionario dataAdmissao vendas salario
     where 
-        cpf = (read (funcionario !! 0) :: String)
-        nome = produto !! 1
-        data_admissao = (read (funcionario !! 2) :: String)
-        vendas = fromIO(getVendasEmLista id)
-        salario = produto !! 3
-
-getVendasEmLista :: Int -> IO [String]
-getVendasEmLista id = do
-    vendas <- openFile "../arquivos/Vendas.csv" ReadMode
-    listaVendas <- lines <$> hGetContents vendas
-    let vendasFinal = converteVendasEmLista listaVendas
+        nome = funcionario !! 0
+        cpfFuncionario = funcionario !! 1
+        dataAdmissao = funcionario !! 2
+        vendas = fromIO(getVendasEmLista cpfFuncionario)
+        salario = (read (funcionario !! 3) :: Double)
 
 -- Converte IO em puro
 fromIO :: IO[String] -> [String]
 fromIO x = (unsafePerformIO x :: [String])
 
+---------------- Visualização de Vendas ----------------
+getVendasEmLista :: String -> IO [String]
+getVendasEmLista cpf = do
+    vendas <- openFile "../arquivos/Vendas.csv" ReadMode
+    listaVendas <- lines <$> hGetContents vendas
+    let vendasFinal = converteVendasEmLista listaVendas
+    return $ (filtraVenda cpf vendasFinal)
+
+converteVendasEmLista :: [String] -> [[String]]
+converteVendasEmLista [] = []
+converteVendasEmLista (venda:vendas) =
+    (split venda ',') : converteVendasEmLista vendas
+
+filtraVenda :: String -> [[String]] -> [String]
+filtraVenda _ [] = []
+filtraVenda cpf (venda:vendas)
+    | cpf == cpfFuncionario = (head venda) : filtraVenda cpf vendas
+    | otherwise = filtraVenda cpf vendas
+    where
+        cpfFuncionario = venda !! 1
+
 -------------------------------UTIL----------------------------------------
+excluiFuncionario :: [Funcionario] -> String -> [Funcionario] -> [Funcionario] 
+excluiFuncionario [] cpf [] = []
+excluiFuncionario (funcionario:funcionarios) cpf aux
+    | getCpfFuncionario funcionario == cpf = aux ++ funcionarios
+    | otherwise = excluiFuncionario funcionarios cpf (aux ++ [funcionario])
+
+getFuncionarioPeloCpf :: String -> [Funcionario] -> Maybe Funcionario
+getFuncionarioPeloCpf cpf [] = Nothing
+getFuncionarioPeloCpf cpf (p:ps) = if cpf == getCpfFuncionario p then Just p
+    else getFuncionarioPeloCpf cpf ps
+
+getAtributosFuncionario :: Funcionario -> String
+getAtributosFuncionario (Funcionario {nomeFuncionario = n, cpfFuncionario = c, dataAdmissao = d, vendas = v, salario = s}) = n++ "," ++ c ++ "," ++ d ++ "," ++ show s
+
+setSalario :: Funcionario -> Double -> Funcionario
+setSalario (Funcionario {nomeFuncionario = nome, cpfFuncionario = cpf, dataAdmissao = d, vendas = v, salario = s}) salarioNovo
+    = Funcionario nome cpf d v salarioNovo
+
+adicionaVendaDeFuncionario :: [Funcionario] -> String -> String -> [Funcionario]-> [Funcionario]
+adicionaVendaDeFuncionario [] x y aux= []
+adicionaVendaDeFuncionario (Funcionario {nomeFuncionario = n, cpfFuncionario = c, dataAdmissao = d, vendas = v, salario = s}:funcionarios) cpf idVenda aux
+    | cpf == c = aux ++ [Funcionario n c d (v++[idVenda]) s]
+    | otherwise = adicionaVendaDeFuncionario funcionarios cpf idVenda (aux ++ [Funcionario n c d v s])
+
+---------------------------IO FUNCIONARIO-----------------------------------
+escreverArquivo :: Funcionarios -> IO ()
+escreverArquivo funcionarios = do
+    arq <- openFile "../arquivos/Funcionarios.csv" WriteMode
+    let dataFuncionarios = getFuncionarios funcionarios
+    print "data"
+    print dataFuncionarios
+    hPutStr arq (formataParaEscrita dataFuncionarios)
+    hClose arq
+
+getFuncionarios :: Funcionarios -> [Funcionario]
+getFuncionarios (Funcionarios {funcionarios = f}) = getFuncionariosFromTuple f
+
+getFuncionariosFromTuple :: [(String, Funcionario)] -> [Funcionario]
+getFuncionariosFromTuple [] = []
+getFuncionariosFromTuple ((_,f): cs) = f : getFuncionariosFromTuple cs
 
 formataParaEscrita :: [Funcionario] -> String
 formataParaEscrita [] = []
 formataParaEscrita (f:cs) = getAtributosFuncionario f ++ "\n" ++ formataParaEscrita cs
+--------------------------------------
 
----------------------------IO FUNCIONARIO-----------------------------------
+-- testes
+main :: IO()
+main = do
+    let f1 = Funcionario "leo" "f127" "09/09" [] 777.0
+    let f2 = Funcionario "eduardo" "f321" "10/10" [] 888.0
+    let f3 = Funcionario "biden" "f22" "07/11" [] 1.0
+    let f4 = Funcionarios (mapeiaFuncionarioPorCpf [f1,f2,f3])
+    escreverArquivo f4
+    print "^^^^ funcionarios cadastrados ^^^^"
+    let funcionarios = getFuncionariosPuros
+    print funcionarios
+    print "^^^^ funcionarios resgatados do arquivo ^^^^"
 
-escreverArquivo :: [Funcionario] -> IO ()
-escreverArquivo funcionario = do
-    arq <- openFile "../arquivos/Funcionarios.csv" AppendMode
-    print funcionario
-    hPutStrLn arq (formataParaEscrita funcionario)
-    hClose arq
+    -- vendas <- openFile "../arquivos/Vendas.csv" ReadMode
+    -- listaVendas <- lines <$> hGetContents vendas
+    -- let vendasFinal = converteVendasEmLista listaVendas
+    -- let vendasFiltradas = filtraVenda "f127" vendasFinal
+    -- print vendasFiltradas
+    -- funcionarios <- openFile "../arquivos/Funcionarios.csv" ReadMode
+    -- listaFuncionarios <- lines <$> hGetContents funcionarios
+    -- print listaFuncionarios
