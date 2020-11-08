@@ -32,7 +32,7 @@ O sistema CoronaPharm foi pensado e criado em prol da facilitação da administr
 
 - Para uma fácil execução, basta só digitar esse comando no terminal na pasta do projeto.
 
-     ```
+     ```hs
      runhaskell Principal.hs
      ```
 
