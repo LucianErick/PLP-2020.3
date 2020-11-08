@@ -61,7 +61,7 @@ doTelaInicial cursor action | action == "\ESC[B" = telaInicial ((cursor+1) `mod`
                                                     | action == "\ESC[A" && cursor /= 0 = telaInicial (cursor-1)
                                                     | action == "\ESC[A" && cursor == 0 = telaInicial 3
                                                     | action == "\ESC[C" = mudarTelaInicial cursor
-                                                    | action == "\ESC[D" = putStrLn("Sair")
+                                                    | action == "\ESC[D" = putStrLn("\n           Volte Sempre!           \n")
                                                     | otherwise = telaInicial cursor
 
 mudarTelaInicial :: Integer -> IO()
@@ -206,7 +206,7 @@ mudarPrecoProdutoTela = do
    novoPreco <- lerEntradaDouble
 
    -- let listaProdutos = fromIOProduto getProdutosEmLista
-   --return setPreco listaProdutos idAtual novoPreco
+   -- setPrecoProduto listaProdutos idAtual novoPreco
    
    -- print (listaProdutos)
 
@@ -434,11 +434,11 @@ telaOpcoesVisualizarProdutos cursor = do
 visualizarProdutosEstoqueTela :: IO ()
 visualizarProdutosEstoqueTela = do
       system "clear"
-      
+
       produtos <- openFile "../arquivos/Produtos.csv" ReadMode
       
       listaProdutos <- lines <$> hGetContents produtos
-      print (produtos)
+      print listaProdutos
 
       action <- getKey
       putStrLn (" ")
@@ -451,7 +451,7 @@ visualizarProdutosSintomasTela = do
       system "clear"
       produtos <- openFile "../arquivos/SintomasProduto.csv" ReadMode
       listaProdutos <- lines <$> hGetContents produtos
-      print (produtos)
+      print (listaProdutos)
       
       action <- getKey
       putStrLn (" ")

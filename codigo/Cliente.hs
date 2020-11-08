@@ -35,7 +35,7 @@ data Clientes = Clientes{
     clientes :: [(String, Cliente)]
 } deriving Show
 
----------------------Cliente Getters-----------------------------------
+---------------------ClienteGetters----------------------------
 
 
 getAtributosCliente :: Cliente -> String
@@ -59,7 +59,7 @@ getComprasCliente Cliente {compras = c} = c
 getCpf :: Cliente -> String
 getCpf Cliente {cpf = c} = c
 
---------------
+----------------------CADASTRACLIENTE----------------------------
 
 mapeiaCpf :: [Cliente] -> [(String, Cliente)]
 mapeiaCpf [] = []
@@ -95,7 +95,7 @@ getComprasClientesToCsv (c:cs) = if length comprasCli > 0 then getCpf c ++ "," +
 getComprasClienteToString :: [Produto] -> String
 getComprasClienteToString [] = []
 
----------------IO arquivo--------------------
+--------------------------IOCLIENTES---------------------------
 
 
 escreverArquivoCliente :: [Cliente] -> IO ()
@@ -146,8 +146,7 @@ escreverComprasCliente produtos sintomas = do
     hPutStr arq1 (sintomas)
     hClose arq1
     hClose arq
-
---------------- IO Leitura -------------
+-------------------------VISUALIZACAO---------------------------
 
 getClientesEmLista :: IO [Cliente]
 getClientesEmLista = do
@@ -213,7 +212,7 @@ lerSintomasClientes = do
 
 
 
---------util-------
+---------------------------UTIL------------------------------
 
 filtraSintomaCliente :: String -> [[String]] -> [String]
 filtraSintomaCliente cpf [[]] = []
@@ -245,7 +244,7 @@ quebraCliente entrada = split entrada ','
 formataExibicaoCliente :: [String] -> String
 formataExibicaoCliente lista = "Nome: " ++ (lista !! 0) ++ " | cpf:" ++ (lista !! 1) ++ " | data de cadastro:" ++ (lista !! 2)
 
-----------------------------
+-----------------------------MAIN------------------------------
 
 
 main :: IO()
