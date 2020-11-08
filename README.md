@@ -1,5 +1,11 @@
 # Corona Pharm 
 
+<p  align="center">
+     <img  src="./svg/001-ambulancia.svg"  heigth="80"  width="180"/>
+     <img  src="./svg/002-computador-portatil.svg"  heigth="80"  width="180"/>
+     <img  src="./svg/003-sinal.svg"  heigth="80"  width="180"/>
+<p/>
+
 ## Índice
 
 - [O que é CoronaPharm?](#o-que-é-o-coronapharm)
