@@ -88,7 +88,6 @@ getValidade :: Produto -> String
 getValidade Produto {validade = v} = v
 
 
-
 setPreco :: [Produto] -> Int -> Double -> Maybe [Produto]
 setPreco [] x novoPreco = Nothing
 setPreco (c:cs) x novoPreco
@@ -140,6 +139,9 @@ formataParaEscrita (c:cs) = produtoToString c ++ "\n" ++ formataParaEscrita cs
 
 
 ------------------------- Visualização de Produtos -------------------------
+getProdutosPuros :: [Produto]
+getProdutosPuros = (unsafePerformIO getProdutosEmLista :: [Produto])
+
 getProdutosEmLista :: IO [Produto]
 getProdutosEmLista = do
     produtos <- openFile "../arquivos/Produtos.csv" ReadMode
