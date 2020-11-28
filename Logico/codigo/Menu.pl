@@ -1,4 +1,7 @@
 :- initialization(main).
+:- include('Cliente.pl').
+:- include('Arquivos.pl').
+
 
 /* -> FUNCOES UTEIS -- */
 
@@ -88,20 +91,20 @@ limitMain(3).
 
 showExitMessage() :-
     shell(clear),
-    writeln('---------------------------------------------'),
+    writeln('----------------------------------------------'),
     writeln('* MUITO OBRIGADO POR UTILIZAR O CORONA PHARM *'),
     writeln('*                VOLTE SEMPRE!               *'),
-    writeln('---------------------------------------------\n').
+    writeln('----------------------------------------------\n').
 
 doMainScreen(Cursor, Action) :-
     limitMain(Limit),
     (up(Action) -> upAction(Cursor, Limit, NewCursor), mainScreen(NewCursor);
      down(Action) -> downAction(Cursor, Limit, NewCursor), mainScreen(NewCursor);
      left(Action) -> showExitMessage();
-     right(Action) -> (Cursor =:= 0 -> masterScreen(0);%acessoDisciplinasScreen(ListaCompromissos, ListaDisciplinas, 0);
-                       Cursor =:= 1 -> employeeScreen(0);%acessoCompromissosScreen(ListaCompromissos, ListaDisciplinas, 0);
-                       Cursor =:= 2 -> clientScreen(0);%configuracoesScreen(ListaCompromissos, ListaDisciplinas, 0);
-                       Cursor =:= 3 -> write('Voce quer sair do sistema'));%tutorialScreen(ListaCompromissos, ListaDisciplinas));
+     right(Action) -> (Cursor =:= 0 -> masterScreen(0);
+                       Cursor =:= 1 -> employeeScreen(0);
+                       Cursor =:= 2 -> clientScreen(0);
+                       Cursor =:= 3 -> showExitMessage());
      mainScreen(Cursor)).
 
 mainScreen(Cursor) :-
@@ -117,7 +120,7 @@ mainScreen(Cursor) :-
 
 % ---------------------------------------------TELA GESTOR-----------------------------------------------------------
 
-optionsMasterScreen(['Cadastrar Produto', 'Cadastrar Funcionario', 'Atualizar Preço', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
+optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Atualizar preço', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
 limitMaster(6).
 
 doMasterScreen(Cursor, Action) :-
@@ -130,7 +133,7 @@ doMasterScreen(Cursor, Action) :-
                        Cursor =:= 2 -> write('Voce atualizou o preço');%configuracoesScreen(ListaCompromissos, ListaDisciplinas, 0);
                        Cursor =:= 3 -> write('Voce visualizou os funcionarios');%tutorialScreen(ListaCompromissos, ListaDisciplinas));
                        Cursor =:= 4 -> productViewScreen(0);
-                       Cursor =:= 5 -> write('Voce visualizou os clientes');
+                       Cursor =:= 5 -> clientViewScreen();
                        Cursor =:= 6 -> write('Voce visualizou as vendas'));
      masterScreen(Cursor)).
 
@@ -145,8 +148,41 @@ masterScreen(Cursor) :-
     get_single_char(Action),
     doMasterScreen(Cursor, Action).
 
+% ---------------------------------------- TELA VISUALIZAR CLIENTES -----------------------------------
+clientViewScreen() :-
+    shell(clear),
+    lerCsvRowList('Clientes.csv', Clientes),
+    mostraClientes(Clientes),
+    get_single_char(Action),
+    masterScreen(0).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 % --------------------------------------------TELA FUNCIONARIO--------------------------------------------
-optionsEmployeeScreen(['Cadastrar cliente', 'Cadastrar Venda', 'Visualizar clientes', 'Visualizar produtos', 'Visualizar suas vendas']).
+optionsEmployeeScreen(['Cadastrar cliente', 'Cadastrar venda', 'Visualizar clientes', 'Visualizar produtos', 'Visualizar suas vendas']).
 limitEmployee(4).
 
 doEmployeeScreen(Cursor, Action) :-
@@ -156,7 +192,7 @@ doEmployeeScreen(Cursor, Action) :-
      left(Action) -> mainScreen(Cursor);
      right(Action) -> (Cursor =:= 0 -> write('Voce cadastrou um cliente');%acessoDisciplinasScreen(ListaCompromissos, ListaDisciplinas, 0);
                        Cursor =:= 1 -> write('Voce cadastrou uma venda');%acessoCompromissosScreen(ListaCompromissos, ListaDisciplinas, 0);
-                       Cursor =:= 2 -> write('Voce visualizou os clientes');%configuracoesScreen(ListaCompromissos, ListaDisciplinas, 0);
+                       Cursor =:= 2 -> clientViewScreen();%configuracoesScreen(ListaCompromissos, ListaDisciplinas, 0);
                        Cursor =:= 3 -> productViewScreen(0);%tutorialScreen(ListaCompromissos, ListaDisciplinas));
                        Cursor =:= 4 -> write('Voce visualizou sua lista de vendas'));
      employeeScreen(Cursor)).
@@ -222,9 +258,8 @@ productViewScreen(Cursor) :-
     get_single_char(Action),
     doProductViewScreen(Cursor, Action).
 
-% --------------------------------------------------------------------------------------------------------
-
-
+% -----------------------------------------TELA SAIR------------------------------------------------------
+   
 main :-
     % readDisciplinas(ListaDisciplinas),
     % readCompromissos(ListaCompromissos),
