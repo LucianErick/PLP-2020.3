@@ -1,10 +1,14 @@
 :-use_module(library(csv)).
 :-include('Arquivos.pl').
 
+------------------------------CADASTRO-------------------------------------
+
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
     open('../arquivos/Funcionarios.csv', append, File),
-    writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 %Só n sei como funciona o negocio de sitnomas e compras
+    writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 %Só n sei como funciona o negocio de sintomas e compras
     close(File).
+
+------------------------------VIEW ENTRADA---------------------------------
 
 mostraColunasFuncionario:-
     write('------------------Funcionarios--------------\n'),
@@ -29,3 +33,30 @@ mostraLista([H|T], X):-
 mostraFuncionarios(Funcionarios):-
     mostraColunasFuncionario,
     mostraLista(Funcionarios, 1).
+
+
+--------------------------------ATUALIZA VENDAS--------------------------------------
+
+atualiza([],_,_,[]).
+atualiza([X|Xs],Cpf,NovoCliente,[NovoCliente1|Xs]) :-
+    split_string(X,"-","",X1),
+    target(X1,Cpf),
+    formata_funcionario(NovoCliente1,NovoCliente),!.
+atualiza([X|Xs],Cpf,NovoCliente,[X|Resultado]) :- atualiza(Xs,Cpf,NovoCliente,Resultado).
+
+atualiza_vendas(String,NovaVendas) :-
+    ler_arquivo(Funcionarios),
+    atualiza(Funcionarios,String,NovaVendas,Atualizada),
+    atomic_list_concat(Atualizado,"\n",S),
+    open('../arquivos/Funcionarios.csv',write,File),
+    write(File,S),
+    close(File).
+
+
+-------------------------------------LEITURA---------------------------------------------
+
+ler_arquivo(Result) :-
+    open('../arquivos/Funcionarios.csv',read,Str),
+    read_stream_to_codes(Str,Funcionarios),
+    atom_string(Funcionarios,Funcionarios1),
+    split_string(Funcionarios1,"\n","",Result).
