@@ -38,11 +38,11 @@ mostraFuncionarios(Funcionarios):-
 --------------------------------ATUALIZA VENDAS--------------------------------------
 
 atualiza([],_,_,[]).
-atualiza([X|Xs],Cpf,NovoCliente,[NovoCliente1|Xs]) :-
+atualiza([X|Xs],String,NovaVenda,[NovaVenda1|Xs]) :-
     split_string(X,"-","",X1),
     target(X1,Cpf),
-    formata_funcionario(NovoCliente1,NovoCliente),!.
-atualiza([X|Xs],Cpf,NovoCliente,[X|Resultado]) :- atualiza(Xs,Cpf,NovoCliente,Resultado).
+    formata_venda(NovaVenda1,NovaVenda),!.
+atualiza([X|Xs],String,NovaVenda,[X|Resultado]) :- atualiza(Xs,String,NovaVenda,Resultado).
 
 atualiza_vendas(String,NovaVendas) :-
     ler_arquivo(Funcionarios),
