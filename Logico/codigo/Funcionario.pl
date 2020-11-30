@@ -1,6 +1,10 @@
 :-use_module(library(csv)).
 :-include('Arquivos.pl').
 
+cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
+    open('../arquivos/Funcionarios.csv', append, File),
+    writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 %Só n sei como funciona o negocio de sitnomas e compras
+    close(File).
 
 mostraColunasFuncionario:-
     write('------------------Funcionarios--------------\n'),
