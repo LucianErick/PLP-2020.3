@@ -1,6 +1,10 @@
 :-use_module(library(csv)).
 :-include('Arquivos.pl').
 
+cadastraCliente(Cpf, Nome, DataCadastro) :-
+    open('../arquivos/Clientes.csv', append, File),
+    writeln(File, (Nome,Cpf,DataCadastro)),                 %Só n sei como funciona o negocio de sitnomas e compras
+    close(File).
 
 mostraColunas:-
     write('------------------Clientes------------------\n'),
