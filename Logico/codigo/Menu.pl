@@ -1,6 +1,7 @@
 :- initialization(main).
 :- include('Cliente.pl').
 :- include('Funcionario.pl').
+:- include('Produto.pl').
 :- include('Arquivos.pl').
 
 
@@ -155,7 +156,11 @@ registerProductScreen() :-
     getString(Nome, 'Digite o nome do produto'),
     getDouble(Preco, 'Digite o preço do produto'),
     getString(Validade, 'Digite a data de validade do produto'),
-    %- Cadastrar
+    getString(Sintomas, 'Digite os sintomas (Apenas com "," e sem espaços)'),
+    
+    cadastraProduto(Id, Nome, Preco, Validade),
+    cadastraSintomaProduto(Id, Sintomas),
+    
     write('\nProduto cadastrado com sucesso!'),
     get_single_char(Action),
     masterScreen(0).
@@ -168,7 +173,6 @@ registerEmployeeScreen() :-
     getDouble(Salario, 'Digite o salário do funcionário'),
     getString(Admissao, 'Digite a data de admissão do funcionário'),
     cadastraFuncionario(Cpf, Nome, Admissao, Salario),
-    %- Cadastrar
     write('\nFuncionário cadastrado com sucesso!'),
     get_single_char(Action),
     masterScreen(0).
@@ -179,12 +183,12 @@ clientViewScreen() :-
     lerCsvRowList('Clientes.csv', Clientes),
     mostraClientes(Clientes),
     get_single_char(Action),
-    masterScreen(0).
+    mainScreen(0).
 % ---------------------------------------- TELA VISUALIZAR FUNCIONARIOS -----------------------------------
 employeeViewScreen() :-
     shell(clear),
     lerCsvRowList('Funcionarios.csv', Funcionarios),
-    mostraClientes(Funcionarios),
+    mostraFuncionarios(Funcionarios),
     get_single_char(Action),
     masterScreen(0).
 % ---------------------------------------- TELA VISUALIZAR VENDAS -----------------------------------------
@@ -194,8 +198,6 @@ sellViewScreen() :-
     mostraProdutosEstoque(Vendas),
     get_single_char(Action),
     productViewScreen(0).
-
-
 
 % --------------------------------------------------------------------------------------------------------
 % --------------------------------------------TELA OPCOES FUNCIONARIO--------------------------------------------
@@ -285,8 +287,8 @@ doProductViewScreen(Cursor, Action) :-
     (up(Action) -> upAction(Cursor, Limit, NewCursor), productViewScreen(NewCursor);
      down(Action) -> downAction(Cursor, Limit, NewCursor), productViewScreen(NewCursor);
      left(Action) -> mainScreen(Cursor);
-     right(Action) -> (Cursor =:= 0 -> write('Voce visualizou os produtos por sintoma');
-                       Cursor =:= 1 -> write('Voce visualizou os produtos por estoque'));
+     right(Action) -> (Cursor =:= 0 -> productSymptomViewScreen();
+                       Cursor =:= 1 -> productStockViewScreen());
      productViewScreen(Cursor)).
 
 productViewScreen(Cursor) :-
@@ -303,7 +305,7 @@ productViewScreen(Cursor) :-
 productSymptomViewScreen() :-
     shell(clear),
     lerCsvRowList('SintomasProdutos.csv', SintomasProdutos),
-    mostraProdutosSintoma(SintomasProdutos),
+    mostraProdutosSintomas(SintomasProdutos),
     get_single_char(Action),
     productViewScreen(0).
 
