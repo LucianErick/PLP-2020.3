@@ -40,7 +40,7 @@ mostraFuncionarios(Funcionarios):-
 atualiza([],_,_,[]).
 atualiza([X|Xs],String,NovaVenda,[NovaVenda1|Xs]) :-
     split_string(X,"-","",X1),
-    target(X1,Cpf),
+    target(X1,String),
     formata_venda(NovaVenda1,NovaVenda),!.
 atualiza([X|Xs],String,NovaVenda,[X|Resultado]) :- atualiza(Xs,String,NovaVenda,Resultado).
 
