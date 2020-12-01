@@ -12,7 +12,7 @@ cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
 
 mostraColunasFuncionario:-
     write('------------------Funcionarios--------------\n'),
-    write('1.Nome, 2. Cpf, 3. Data Admissão, 4. Vendas, 5. Salário.\n'),
+    write('1.Nome, 2. Cpf, 3. Data Admissão, 4. Salário, 5. Vendas.\n'),
     write('--------------------------------------------\n').
     
 mostraListaFuncionarios([], _).
