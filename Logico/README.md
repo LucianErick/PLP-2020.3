@@ -1,4 +1,5 @@
-## Configuração do ambiente
+## Configuração do ambiente para PROLOG
+
 
 #### Para começar, é preciso ter o swi-prolog instalado na sua máquina 
 

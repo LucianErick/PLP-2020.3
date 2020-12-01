@@ -1,4 +1,5 @@
-## Configuração do ambiente
+## Configuração do ambiente para HASKELL
+
 
 #### Para começar, é preciso ter o GHC e Cabal instalado na sua máquina 
 
