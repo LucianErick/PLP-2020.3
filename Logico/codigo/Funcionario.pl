@@ -1,5 +1,6 @@
 :-use_module(library(csv)).
 :-include('Arquivos.pl').
+:-include('Clientes.pl')
 
 ------------------------------CADASTRO-------------------------------------
 
@@ -39,11 +40,12 @@ mostraFuncionarios(Funcionarios):-
 --------------------------------ADICIONAVENDAS--------------------------------------
 
 
-adicionaCompra(CpfFuncionario, IdProduto):-
+adicionaVenda(CpfFuncionario, IdProduto, CpfCliente):-
     produtoExiste(IdProduto),
+    clinteExite(CpfCliente),
     funcionarioExiste(CpfFuncionario),
     open('../arquivos/ProdutosVenda.csv', append, File),
-    writeln(File, (CpfFuncionario, IdProduto)),                 
+    writeln(File, (CpfFuncionario, IdProduto, CpfCliente)),                 
     close(File).
     
 
