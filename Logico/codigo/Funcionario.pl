@@ -4,6 +4,7 @@
 ------------------------------CADASTRO-------------------------------------
 
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
+    funcionarioExiste(Cpf)
     open('../arquivos/Funcionarios.csv', append, File),
     writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 %Só n sei como funciona o negocio de sintomas e compras
     close(File).
@@ -51,6 +52,18 @@ atualiza_vendas(String,NovaVendas) :-
     open('../arquivos/Funcionarios.csv',write,File),
     write(File,S),
     close(File).
+
+
+----------------------------------VALIDAEXISTE------------------------------------------
+
+funcionarioExiste(CpfFuncionario):-
+    lerCsvRowList('Funcinarios.csv', Funcinarios),
+    verificaFuncionarios(CpfFuncionario, Funcinarios).
+
+verificaFuncionarios(_,[], false).
+verificaFuncionarios(SearchedCpf, [H|T]) :-
+    (member(SearchedCpf, H) -> true
+    ;verificaFuncionarios(SearchedCpf, T)).
 
 
 -------------------------------------LEITURA---------------------------------------------
