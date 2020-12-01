@@ -1,6 +1,6 @@
 :-use_module(library(csv)).
 :-include('Arquivos.pl').
-:-include('Cliente.pl')
+:-include('Clientes.pl')
 
 ------------------------------CADASTRO-------------------------------------
 
