@@ -9,8 +9,6 @@
 ## Índice
 
 - [O que é CoronaPharm?](#o-que-é-o-coronapharm)
-- [Configurando o ambiente](#configuração-do-ambiente)
-- [Execução](#execução)
 - [Observações finais](#observações-finais)
 
 ## O que é o CoronaPharm
