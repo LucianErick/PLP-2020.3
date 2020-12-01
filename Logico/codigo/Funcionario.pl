@@ -39,7 +39,7 @@ mostraFuncionarios(Funcionarios):-
 --------------------------------ADICIONAVENDAS--------------------------------------
 
 
-adicionaCompra(CpfFuncionario, IdProduto):-
+adicionaVenda(CpfFuncionario, IdProduto):-
     produtoExiste(IdProduto),
     funcionarioExiste(CpfFuncionario),
     open('../arquivos/ProdutosVenda.csv', append, File),
