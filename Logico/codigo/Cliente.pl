@@ -52,7 +52,7 @@ adicionaCompra(IdCliente, IdProduto):-
     open('../arquivos/ComprasCliente.csv', append, File),
     writeln(File, (IdCliente, IdProduto)),                 %Só n sei como funciona o negocio de sitnomas e compras
     close(File).
-    .
+    
 
 produtoExiste(IdProduto):-
     lerCsvRowList('Produtos.csv', Produtos),
