@@ -57,7 +57,7 @@ atualiza_vendas(String,NovaVendas) :-
 ----------------------------------VALIDAEXISTE------------------------------------------
 
 funcionarioExiste(CpfFuncionario):-
-    lerCsvRowList('Funcinarios.csv', Funcinarios),
+    lerCsvRowList('../arquivos/Funcinarios.csv', Funcinarios),
     verificaFuncionarios(CpfFuncionario, Funcinarios).
 
 verificaFuncionarios(_,[], false).
