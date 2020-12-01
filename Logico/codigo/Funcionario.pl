@@ -6,10 +6,10 @@
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
     funcionarioExiste(Cpf)
     open('../arquivos/Funcionarios.csv', append, File),
-    writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 %Só n sei como funciona o negocio de sintomas e compras
+    writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 
     close(File).
 
-------------------------------VIEW ENTRADA---------------------------------
+------------------------------VIEWENTRADA---------------------------------
 
 mostraColunasFuncionario:-
     write('------------------Funcionarios--------------\n'),
@@ -36,25 +36,28 @@ mostraFuncionarios(Funcionarios):-
     mostraLista(Funcionarios, 1).
 
 
---------------------------------ATUALIZA VENDAS--------------------------------------
+--------------------------------ADICIONAVENDAS--------------------------------------
 
-atualiza([],_,_,[]).
-atualiza([X|Xs],String,NovaVenda,[NovaVenda1|Xs]) :-
-    split_string(X,"-","",X1),
-    target(X1,String),
-    formata_venda(NovaVenda1,NovaVenda),!.
-atualiza([X|Xs],String,NovaVenda,[X|Resultado]) :- atualiza(Xs,String,NovaVenda,Resultado).
 
-atualiza_vendas(String,NovaVendas) :-
-    ler_arquivo(Funcionarios),
-    atualiza(Funcionarios,String,NovaVendas,Atualizada),
-    atomic_list_concat(Atualizado,"\n",S),
-    open('../arquivos/Funcionarios.csv',write,File),
-    write(File,S),
+adicionaCompra(CpfFuncionario, IdProduto):-
+    produtoExiste(IdProduto),
+    funcionarioExiste(CpfFuncionario),
+    open('../arquivos/ProdutosVenda.csv', append, File),
+    writeln(File, (CpfFuncionario, IdProduto)),                 
     close(File).
+    
+
+produtoExiste(IdProduto):-
+    lerCsvRowList('Produtos.csv', Produtos),
+    verificaProduto(IdProduto, Produtos).
+
+verificaProduto(_,[], false).
+verificaProduto(ProdutoId, [H|T]) :-
+    (member(ProdutoId, H) -> true
+    ;verificaProduto(ProdutoId, T)).
 
 
-----------------------------------VALIDAEXISTE------------------------------------------
+----------------------------------VALIDAFUNCIONARIOEXISTE------------------------------------------
 
 funcionarioExiste(CpfFuncionario):-
     lerCsvRowList('../arquivos/Funcinarios.csv', Funcinarios),
