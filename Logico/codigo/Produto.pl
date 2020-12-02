@@ -15,3 +15,12 @@ cadastraSintomaProduto(Id, Sintomas) :-
 sintomasEmLista(StringSintomas, ListaSintomas) :-
     split_string(StringSintomas, '', ',', ListaSintomas).
 %--------------------------------------------------------------------------------
+
+getProdutoPorId(_, [], false).
+getProdutoPorId(IdProduto, [H|[]], P):- getProduto(IdProduto, H, P).
+getProdutoPorId(IdProduto, [H|T], P):- getProdutoPorId(IdProduto, T, P).
+
+
+getProduto(_, [], false).
+getProduto(IdProduto, [IdProduto|Resto], [IdProduto|Resto]).
+getProduto(IdProduto, [_|T], R):- getProduto(IdProduto, T, R).
