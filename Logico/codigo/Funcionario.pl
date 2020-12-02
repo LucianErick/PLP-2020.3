@@ -113,8 +113,8 @@ getVendas(IdCliente, L):-
 %-----------------------------VALIDAFUNCIONARIOEXISTE------------------------------
 
 funcionarioExiste(CpfFuncionario):-
-    lerCsvRowList('../arquivos/Funcinarios.csv', Funcinarios),
-    verificaFuncionarios(CpfFuncionario, Funcinarios).
+    lerCsvRowList('../arquivos/Funcinarios.csv', Funcionarios),
+    verificaFuncionarios(CpfFuncionario, Funcionarios).
 
 verificaFuncionarios(_,[], false).
 verificaFuncionarios(SearchedCpf, [H|T]) :-
