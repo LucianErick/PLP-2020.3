@@ -51,12 +51,12 @@ verificaFuncionarios(SearchedCpf, [H|T]) :-
 
 %--------------------------------VENDAS--------------------------------------
 
-adicionaVenda(CpfFuncionario, IdProduto, IdCliente):-
+adicionaVenda(CpfFuncionario, IdProduto, IdCliente, DataVenda):-
     produtoExiste(IdProduto),
     clienteExiste(IdCliente),
     funcionarioExiste(CpfFuncionario),
     open('../arquivos/ComprasCliente.csv', append, File),
-    writeln(File, (CpfFuncionario, IdProduto, IdCliente)),
+    writeln(File, (CpfFuncionario, IdProduto, IdCliente, DataVenda)),
     close(File).
     
 %--------------------------VERIFICA CLIENTE/PRODUTO----------------------------
@@ -103,7 +103,7 @@ mostraQTDVendasFuncionario(CpfFuncionario):-
 ; write(Length), write(' produtos vendidos!\n')).
 
 
-getCompras(CpfFuncionario, L):-
+getVendas(CpfFuncionario, L):-
     lerCsvRowList("ProdutosVendas.csv", Vendas),
     filtrarCompras(CpfFuncionario, Vendas,R),
     exclude(empty, R, L).

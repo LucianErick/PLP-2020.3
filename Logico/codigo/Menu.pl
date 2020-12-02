@@ -122,8 +122,8 @@ mainScreen(Cursor) :-
 
 % ---------------------------------------------TELA OPCOES GESTOR-----------------------------------------------------------
 
-optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Atualizar preço', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
-limitMaster(6).
+optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
+limitMaster(5).
 
 doMasterScreen(Cursor, Action) :-
     limitMaster(Limit),
@@ -132,11 +132,10 @@ doMasterScreen(Cursor, Action) :-
      left(Action) -> mainScreen(Cursor);
      right(Action) -> (Cursor =:= 0 -> registerProductScreen();
                        Cursor =:= 1 -> registerEmployeeScreen();
-                       Cursor =:= 2 -> write('Voce atualizou o preço'); % TIRAR DEPOIS
-                       Cursor =:= 3 -> employeeViewScreen();
-                       Cursor =:= 4 -> productViewScreen(0);
-                       Cursor =:= 5 -> clientViewScreen();
-                       Cursor =:= 6 -> write('Voce visualizou as vendas'));
+                       Cursor =:= 2 -> employeeViewScreen();
+                       Cursor =:= 3 -> productViewScreen(0);
+                       Cursor =:= 4 -> clientViewScreen();
+                       Cursor =:= 5 -> sellViewScreen());
      masterScreen(Cursor)).
 
 masterScreen(Cursor) :-
@@ -156,7 +155,7 @@ registerProductScreen() :-
     getString(Nome, 'Digite o nome do produto'),
     getDouble(Preco, 'Digite o preço do produto'),
     getString(Validade, 'Digite a data de validade do produto'),
-    getString(Sintomas, 'Digite os sintomas (Apenas com "," e sem espaços)'),
+    getString(Sintomas, 'Digite o sintoma (Apenas um)'),
     
     cadastraProduto(Id, Nome, Preco, Validade),
     cadastraSintomaProduto(Id, Sintomas),
@@ -194,8 +193,8 @@ employeeViewScreen() :-
 % ---------------------------------------- TELA VISUALIZAR VENDAS -----------------------------------------
 sellViewScreen() :-
     shell(clear),
-    lerCsvRowList('Vendas.csv', Vendas),
-    mostraProdutosEstoque(Vendas),
+    lerCsvRowList('ProdutosVenda.csv', Vendas),
+    mostraProdutos(Vendas),
     get_single_char(Action),
     productViewScreen(0).
 
@@ -233,9 +232,10 @@ registerSellScreen() :-
     getString(CpfFuncionario, 'Digite o cpf do funcionario'),
     getString(CpfCliente, 'Digite o cpf do cliente'),
     getString(DataVenda, 'Digite a data de cadastro do cliente'),
-    getString(ListaProdutos, 'Digite os ids dos produtos (Separados por ",")'),
+    getString(Produto, 'Digite o id do produto'),
 
-    %- Cadastrar
+    adicionaVenda(CpfFuncionario, IdProduto, CpfCliente, DataVenda),
+
     write('\nVenda cadastrada com sucesso!'),
     get_single_char(Action),
     employeeScreen(0).
@@ -247,7 +247,6 @@ registerClientScreen() :-
     getString(Nome, 'Digite o nome do cliente'),
     getString(DataCadastro, 'Digite a data de cadastro do cliente'),
     cadastraCliente(Cpf, Nome, DataCadastro),
-    %- Cadastrar
     write('\nCliente cadastrado com sucesso!'),
     get_single_char(Action),
     employeeScreen(0).
@@ -262,7 +261,7 @@ doClientScreen(Cursor, Action) :-
      down(Action) -> downAction(Cursor, Limit, NewCursor), clientScreen(NewCursor);
      left(Action) -> mainScreen(Cursor);
      right(Action) -> (Cursor =:= 0 -> productViewScreen(0);
-                       Cursor =:= 1 -> write('Voce realizou uma compra'));
+                       Cursor =:= 1 -> registerBuyScreen());
      clientScreen(Cursor)).
 
 clientScreen(Cursor) :-
@@ -276,6 +275,14 @@ clientScreen(Cursor) :-
     get_single_char(Action),
     doClientScreen(Cursor, Action).
 
+registerBuyScreen() :-
+    shell(clear),
+    getString(CpfCliente, 'Digite o cpf do cliente'),
+    getInt(IdProduto, 'Digite o id do produto'),
+    adicionaCompra(CpfCliente, IdProduto),
+    write('\nCompra cadastrada com sucesso!'),
+    get_single_char(Action),
+    clientScreen(0).
 
 % ---------------------------------- TELA OPCOES VISUALIZAR PRODUTOS --------------------------------
 
