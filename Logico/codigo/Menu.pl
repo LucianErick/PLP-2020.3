@@ -305,7 +305,7 @@ productViewScreen(Cursor) :-
 productSymptomViewScreen() :-
     shell(clear),
     lerCsvRowList('SintomasProdutos.csv', SintomasProdutos),
-    mostraProdutosSintomas(SintomasProdutos),
+    mostraSintomaProduto(SintomasProdutos),
     get_single_char(Action),
     productViewScreen(0).
 
@@ -313,7 +313,7 @@ productSymptomViewScreen() :-
 productStockViewScreen() :-
     shell(clear),
     lerCsvRowList('Produtos.csv', Produtos),
-    mostraProdutosEstoque(Produtos),
+    mostraProdutos(Produtos),
     get_single_char(Action),
     productViewScreen(0).
 
