@@ -105,7 +105,7 @@ mostraVendaFuncionario(Cpf):-
 ; write(Length), write(' produtos vendidos!\n')).
 
 
-getCompras(IdCliente, L):-
+getVendas(IdCliente, L):-
     lerCsvRowList("ProdutosVenda.csv", Vendas),
     filtrarVendas(CpfFuncionario, Vendas,R),
     exclude(empty, R, L).
