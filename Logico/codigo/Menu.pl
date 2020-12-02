@@ -122,21 +122,20 @@ mainScreen(Cursor) :-
 
 % ---------------------------------------------TELA OPCOES GESTOR-----------------------------------------------------------
 
-optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Atualizar preço', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
-limitMaster(6).
+optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
+limitMaster(5).
 
 doMasterScreen(Cursor, Action) :-
     limitMaster(Limit),
     (up(Action) -> upAction(Cursor, Limit, NewCursor), masterScreen(NewCursor);
      down(Action) -> downAction(Cursor, Limit, NewCursor), masterScreen(NewCursor);
      left(Action) -> mainScreen(Cursor);
-     right(Action) -> (Cursor =:= 0 -> registerProductScreen();
-                       Cursor =:= 1 -> registerEmployeeScreen();
-                       Cursor =:= 2 -> write('Voce atualizou o preço'); % TIRAR DEPOIS
-                       Cursor =:= 3 -> employeeViewScreen();
-                       Cursor =:= 4 -> productViewScreen(0);
-                       Cursor =:= 5 -> clientViewScreen();
-                       Cursor =:= 6 -> write('Voce visualizou as vendas'));
+     right(Action) -> (Cursor =:= 0 -> registerProductScreen(); % OK
+                       Cursor =:= 1 -> registerEmployeeScreen(); % OK
+                       Cursor =:= 2 -> employeeViewScreen(); %OK
+                       Cursor =:= 3 -> productViewScreen(0);
+                       Cursor =:= 4 -> clientViewScreen();
+                       Cursor =:= 5 -> write('Voce visualizou as vendas.'));
      masterScreen(Cursor)).
 
 masterScreen(Cursor) :-
