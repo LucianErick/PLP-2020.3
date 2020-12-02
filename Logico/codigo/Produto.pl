@@ -15,7 +15,6 @@ cadastraSintomaProduto(Id, Sintomas) :-
 sintomasEmLista(StringSintomas, ListaSintomas) :-
     split_string(StringSintomas, '', ',', ListaSintomas).
 %--------------------------------------------------------------------------------
-
 mostraColunasDeEstoque:-
     write('------------------Produtos------------------\n'),
     write('1. Id, 2. Nome, 3. Preço, 4. Validade\n'),
@@ -65,3 +64,12 @@ mostraListaSintoma([H|T], X):-
 mostraSintomaProduto(SintomaProduto):-
     mostraColunasSintomas,
     mostraListaSintoma(SintomaProduto, 1). 
+=======
+getProdutoPorId(_, [], false).
+getProdutoPorId(IdProduto, [H|[]], P):- getProduto(IdProduto, H, P).
+getProdutoPorId(IdProduto, [H|T], P):- getProdutoPorId(IdProduto, T, P).
+
+
+getProduto(_, [], false).
+getProduto(IdProduto, [IdProduto|Resto], [IdProduto|Resto]).
+getProduto(IdProduto, [_|T], R):- getProduto(IdProduto, T, R).
