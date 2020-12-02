@@ -4,7 +4,7 @@
 cadastraCliente(Cpf, Nome, DataCadastro) :-
     (clienteExiste(Cpf) -> false
     ;open('../arquivos/Clientes.csv', append, File),
-    writeln(File, (Nome,Cpf,DataCadastro)),                 %Só n sei como funciona o negocio de sitnomas e compras
+    writeln(File, (Nome,Cpf,DataCadastro)),                 
     close(File)).
 
 
