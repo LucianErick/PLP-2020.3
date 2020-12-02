@@ -2,89 +2,64 @@
 :-include('Arquivos.pl').
 :-include('Cliente.pl').
 
-%--------------------------CADASTRO FUNCIONARIO--------------------------------
+
+%----------------------------CADASTRO-----------------------------------
 
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
-    funcionarioExiste(Cpf)
-    open('../arquivos/Funcionarios.csv', append, File),
-    writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 
-    close(File).
+    (funcionarioExiste(Cpf) -> false
+    ;open('../arquivos/Funcionarios.csv', append, File),
+    writeln(File, (Nome,Cpf,DataAdmissao, Salario)),                 
+    close(File)).
 
-%------------------------------VISUALIZACAO FUNCIONARIO---------------------------------
-
-mostraColunasFuncionario:-
-    write('------------------Funcionarios--------------\n'),
-    write('1.Nome, 2. Cpf, 3. Data Admissão, 4. Salário, 5. Vendas.\n'),
+%---------------------------VISUALIZACAO----------------------------------
+mostraColunasFuncionarios:-
+    write('------------------Funcionarios------------------\n'),
+    write('1.Nome, 2. Cpf, 3. Data Admissão, 4.Salário, 5.QTD de Vendas.\n'),
     write('--------------------------------------------\n').
     
-mostraListaFuncionarios([], _).
-mostraListaFuncionarios([H|T], X):-
+mostraListaFuncionarios([],_ , _).
+mostraListaFuncionarios([H|T], CpfFuncionario, X):-
     Next is X + 1,
     write(X),
     write('. '),
     write(H), write('\n'),
-    mostraListaFuncionarios(T, Next).
+    (X =:= 4 -> write('\nVendas do funcionários:'), nl, mostraQTDVendasFuncionario(CpfFuncionario)
+    ;write('')),
+    mostraListaFuncionarios(T, CpfFuncionario, Next).
 
 
-mostraLista([],_).
-mostraLista([H|T], X):-
-    mostraListaFuncionarios(H, X),
+mostraArray([],_).
+mostraArray([H|T], X):-
+    nth0(1, H, CpfFuncionario),
+    mostraListaFuncionarios(H, CpfFuncionario, X),
     write('--------------------------------------------\n'),
-    mostraLista(T,X).
+    mostraArray(T,X).
 
 mostraFuncionarios(Funcionarios):-
-    mostraColunasFuncionario,
-    mostraLista(Funcionarios, 1).
-
-%------------------------------VISUALIZACAO VENDA---------------------------------
-
-mostraColunasVendas:-
-    write('------------------Vendas--------------\n'),
-    write('1.Cpf do funcionário, 2. Vendas.\n'),
-    write('--------------------------------------------\n').
-    
-mostraListaVendas([], _).
-mostraListaVendas([H|T], X):-
-    Next is X + 1,
-    write(X),
-    write('. '),
-    write(H), write('\n'),
-    mostraListaVendas(T, Next).
+    mostraColunasFuncionarios,
+    mostraArray(Funcionarios, 1).
 
 
-mostraLista([],_).
-mostraLista([H|T], X):-
-    mostraListaVendas(H, X),
-    write('--------------------------------------------\n'),
-    mostraLista(T,X).
+funcionarioExiste(CpfFuncionario):-
+    lerCsvRowList('Funcionarios.csv', Funcionarios),
+    verificaFuncionarios(CpfFuncionario, Funcionarios).
 
-mostraFuncionarios(ProdutosVenda):-
-    mostraColunasVendas,
-    mostraLista(ProdutosVenda, 1).
+verificaFuncionarios(_,[], false).
+verificaFuncionarios(SearchedCpf, [H|T]) :-
+    (member(SearchedCpf, H) -> true
+    ;verificaFuncionarios(SearchedCpf, T)).
 
-%-----------------------------CADASTRO VENDA----------------------------------
+%--------------------------------VENDAS--------------------------------------
 
-cadastraVenda(CpfFuncionario, IdProduto, CpfCliente):-
+adicionaVenda(CpfFuncionario, IdProduto, IdCliente):-
     produtoExiste(IdProduto),
-    clienteExiste(CpfCliente),
-    funcionarioExiste(CpfFuncionario),
-    open('../arquivos/ProdutosVenda.csv', append, File),
-    writeln(File, (CpfFuncionario, IdProduto, CpfCliente)),                 
+    clienteExiste(IdCliente),
+    funcionarioExiste(CpfFuncionario)
+    open('../arquivos/ComprasCliente.csv', append, File),
+    writeln(File, (CpfFuncionario, IdProduto, IdCliente)),
     close(File).
-
-filtrarVendas(_, [], []).
-filtrarVendas(CpfFuncionario, [H|T], [X|D]):-
-    removeIfNotPresent(CpfFuncionario, H, X),
-    filtrarVendas(CpfFuncionario,T, D).
-
-
-removeIfNotPresent(_, [], []).
-removeIfNotPresent(Cpf, [Cpf,V|T], V).
-removeIfNotPresent(Cpf, [H|T], []).
-
-empty([]).
     
-%-----------------------------VALIDA PRODUTO EXISTE--------------------------------
+--------------------------VERIFICA CLIENTE/PRODUTO----------------------------
 
 produtoExiste(IdProduto):-
     lerCsvRowList('Produtos.csv', Produtos),
@@ -93,46 +68,43 @@ produtoExiste(IdProduto):-
 verificaProduto(_,[], false).
 verificaProduto(ProdutoId, [H|T]) :-
     (member(ProdutoId, H) -> true
-    ;verificaProduto(ProdutoId, T)).
+    ;verificaClientes(ProdutoId, T)).
 
-%----------------------MOSTRAR QTD VENDAS DO FUNCIONARIO------------------------
+clienteExiste(CpfCliente):-
+    lerCsvRowList('Clientes.csv', Clientes),
+    verificaClientes(CpfCliente, Clientes).
 
-mostraVendaFuncionario(Cpf):-
-    getVendas(Cpf, Vendas),
+verificaClientes(_,[], false).
+verificaClientes(SearchedCpf, [H|T]) :-
+    (member(SearchedCpf, H) -> true
+    ;verificaClientes(SearchedCpf, T)).
+
+----------------------------------FILTRO------------------------------------------
+
+filtrarVendas(_, [], []).
+filtrarVendas(CpfFuncionario, [H|T], [X|D]):-
+    removeIfNotPresent(CpfFuncionario, H, X),
+    filtrarVendas(CpfFuncionario,T, D).
+
+
+removeIfNotPresent(_, [], []).
+removeIfNotPresent(CpfFuncionario, [CpfFuncionario,V|T], V).
+removeIfNotPresent(CpfFuncionario, [H|T], []).
+
+empty([]).
+
+%---------------------MOSTRA-QTD-VENDAS-------------------------------
+
+mostraQTDVendasFuncionario(CpfFuncionario):-
+    getVendas(CpfFuncionario, Vendas),
     exclude(empty,Vendas,Produtos),
     length(Produtos,Length),
     (Length =:= 0 -> write('Sem produtos vendidos!\n')
 ; write(Length), write(' produtos vendidos!\n')).
 
 
-getVendas(IdCliente, L):-
-    lerCsvRowList("ProdutosVenda.csv", Vendas),
-    filtrarVendas(CpfFuncionario, Vendas,R),
+getCompras(CpfFuncionario, L):-
+    lerCsvRowList("ProdutosVendas.csv", Vendas),
+    filtrarCompras(CpfFuncionario, Vendas,R),
     exclude(empty, R, L).
 
-%-----------------------------VALIDAFUNCIONARIOEXISTE------------------------------
-
-funcionarioExiste(CpfFuncionario):-
-    lerCsvRowList('../arquivos/Funcinarios.csv', Funcionarios),
-    verificaFuncionarios(CpfFuncionario, Funcionarios).
-
-verificaFuncionarios(_,[], false).
-verificaFuncionarios(SearchedCpf, [H|T]) :-
-    (member(SearchedCpf, H) -> true
-    ;verificaFuncionarios(SearchedCpf, T)).
-
-%-----------------------------------LEITURAFUNCIONARIO----------------------------------------
-
-ler_arquivo(Result) :-
-    open('../arquivos/Funcionarios.csv',read,Str),
-    read_stream_to_codes(Str,Funcionarios),
-    atom_string(Funcionarios,Funcionarios1),
-    split_string(Funcionarios1,"\n","",Result).
-
-%-------------------------------------LEITURAVENDAS---------------------------------------------
-
-ler_arquivo(Result) :-
-    open('../arquivos/ProdutosVenda.csv',read,Str),
-    read_stream_to_codes(Str,ProdutosVenda),
-    atom_string(ProdutosVenda,ProdutosVenda1),
-    split_string(ProdutosVenda1,"\n","",Result).
