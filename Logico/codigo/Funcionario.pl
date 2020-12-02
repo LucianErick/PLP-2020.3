@@ -59,7 +59,7 @@ adicionaVenda(CpfFuncionario, IdProduto, IdCliente):-
     writeln(File, (CpfFuncionario, IdProduto, IdCliente)),
     close(File).
     
---------------------------VERIFICA CLIENTE/PRODUTO----------------------------
+%--------------------------VERIFICA CLIENTE/PRODUTO----------------------------
 
 produtoExiste(IdProduto):-
     lerCsvRowList('Produtos.csv', Produtos),
@@ -79,7 +79,7 @@ verificaClientes(SearchedCpf, [H|T]) :-
     (member(SearchedCpf, H) -> true
     ;verificaClientes(SearchedCpf, T)).
 
-----------------------------------FILTRO------------------------------------------
+%----------------------------------FILTRO------------------------------------------
 
 filtrarVendas(_, [], []).
 filtrarVendas(CpfFuncionario, [H|T], [X|D]):-
