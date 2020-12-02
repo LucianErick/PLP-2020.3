@@ -2,10 +2,10 @@
 :-include('Arquivos.pl').
 
 cadastraCliente(Cpf, Nome, DataCadastro) :-
-    clienteExiste(Cpf),
-    open('../arquivos/Clientes.csv', append, File),
+    (clienteExiste(Cpf) -> false
+    ;open('../arquivos/Clientes.csv', append, File),
     writeln(File, (Nome,Cpf,DataCadastro)),                 %Só n sei como funciona o negocio de sitnomas e compras
-    close(File).
+    close(File)).
 
 
 mostraColunas:-
