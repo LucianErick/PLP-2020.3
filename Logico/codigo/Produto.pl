@@ -8,8 +8,7 @@ cadastraProduto(Id, Nome, Preco, Validade) :-
 
 cadastraSintomaProduto(Id, Sintomas) :-
     open('../arquivos/SintomasProdutos.csv', append, File),
-    sintomasEmLista(Sintomas, ListaSintomas),
-    writeln(File, (Id, ListaSintomas)),
+    writeln(File, (Id, Sintomas)),
     close(File).
 
 sintomasEmLista(StringSintomas, ListaSintomas) :-
@@ -29,20 +28,20 @@ mostraListaProdutos([H|T], X):-
     mostraListaProdutos(T, Next).
 
 
-mostraLista([],_).
-mostraLista([H|T], X):-
+mostraListaProd([],_).
+mostraListaProd([H|T], X):-
     mostraListaProdutos(H, X),
     write('--------------------------------------------\n'),
-    mostraLista(T,X).
+    mostraListaProd(T,X).
 
 mostraProdutos(Produtos):-
     mostraColunasDeEstoque,
-    mostraLista(Produtos, 1).
+    mostraListaProd(Produtos, 1).
 
 %--------------------------------------------------------------------------------
 
 mostraColunasSintomas:-
-    write('------------------SintomaProdutos------------------\n'),
+    write('------------------Visualização por Sintoma------------------\n'),
     write('1. Id, 2. Sintomas\n'),
     write('--------------------------------------------\n').
     
@@ -51,24 +50,23 @@ mostraListaSintomaProduto([H|T], X):-
     Next is X + 1,
     write(X),
     write('. '),
-    write(H),
+    write(H), write('\n'),
     mostraListaSintomaProduto(T, Next).
 
 
 mostraListaSintoma([],_).
 mostraListaSintoma([H|T], X):-
     mostraListaSintomaProduto(H, X),
-    write('\n--------------------------------------------\n'),
+    write('--------------------------------------------\n'),
     mostraListaSintoma(T,X).
 
 mostraSintomaProduto(SintomaProduto):-
     mostraColunasSintomas,
-    mostraListaSintoma(SintomaProduto, 1). 
-=======
+    mostraListaSintoma(SintomaProduto, 1).
+
 getProdutoPorId(_, [], false).
 getProdutoPorId(IdProduto, [H|[]], P):- getProduto(IdProduto, H, P).
 getProdutoPorId(IdProduto, [H|T], P):- getProdutoPorId(IdProduto, T, P).
-
 
 getProduto(_, [], false).
 getProduto(IdProduto, [IdProduto|Resto], [IdProduto|Resto]).

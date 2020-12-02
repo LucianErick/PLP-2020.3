@@ -5,7 +5,7 @@
 %--------------------------CADASTRO FUNCIONARIO--------------------------------
 
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
-    funcionarioExiste(Cpf)
+    funcionarioExiste(Cpf),
     open('../arquivos/Funcionarios.csv', append, File),
     writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 
     close(File).

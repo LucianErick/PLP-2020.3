@@ -122,8 +122,8 @@ mainScreen(Cursor) :-
 
 % ---------------------------------------------TELA OPCOES GESTOR-----------------------------------------------------------
 
-optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Atualizar preço', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
-limitMaster(6).
+optionsMasterScreen(['Cadastrar produto', 'Cadastrar funcionario', 'Visualizar funcionários', 'Visualizar produtos', 'Visualizar clientes', 'Visualizar vendas gerais']).
+limitMaster(5).
 
 doMasterScreen(Cursor, Action) :-
     limitMaster(Limit),
@@ -132,11 +132,10 @@ doMasterScreen(Cursor, Action) :-
      left(Action) -> mainScreen(Cursor);
      right(Action) -> (Cursor =:= 0 -> registerProductScreen();
                        Cursor =:= 1 -> registerEmployeeScreen();
-                       Cursor =:= 2 -> write('Voce atualizou o preço'); % TIRAR DEPOIS
-                       Cursor =:= 3 -> employeeViewScreen();
-                       Cursor =:= 4 -> productViewScreen(0);
-                       Cursor =:= 5 -> clientViewScreen();
-                       Cursor =:= 6 -> write('Voce visualizou as vendas'));
+                       Cursor =:= 2 -> employeeViewScreen();
+                       Cursor =:= 3 -> productViewScreen(0);
+                       Cursor =:= 4 -> clientViewScreen();
+                       Cursor =:= 5 -> write('Voce visualizou as vendas'));
      masterScreen(Cursor)).
 
 masterScreen(Cursor) :-
@@ -156,7 +155,7 @@ registerProductScreen() :-
     getString(Nome, 'Digite o nome do produto'),
     getDouble(Preco, 'Digite o preço do produto'),
     getString(Validade, 'Digite a data de validade do produto'),
-    getString(Sintomas, 'Digite os sintomas (Apenas com "," e sem espaços)'),
+    getString(Sintomas, 'Digite o sintoma (Apenas um)'),
     
     cadastraProduto(Id, Nome, Preco, Validade),
     cadastraSintomaProduto(Id, Sintomas),
@@ -262,7 +261,7 @@ doClientScreen(Cursor, Action) :-
      down(Action) -> downAction(Cursor, Limit, NewCursor), clientScreen(NewCursor);
      left(Action) -> mainScreen(Cursor);
      right(Action) -> (Cursor =:= 0 -> productViewScreen(0);
-                       Cursor =:= 1 -> write('Voce realizou uma compra'));
+                       Cursor =:= 1 -> buyProductScreen());
      clientScreen(Cursor)).
 
 clientScreen(Cursor) :-
@@ -275,6 +274,17 @@ clientScreen(Cursor) :-
     showOptions(ListaOpcoes, Cursor, 0),
     get_single_char(Action),
     doClientScreen(Cursor, Action).
+
+
+% --------------------------------------------------------------------------------------------------
+buyProductScreen() :-
+    shell(clear),
+    getString(CpfCliente, 'Digite o seu cpf'),
+    getInt(IdProduto, 'Digite o ID do produto'),
+    adicionaCompra(CpfCliente, IdProduto),
+    write('Compra realizada com sucesso!'),
+    get_single_char(Action),
+    clientScreen(0).
 
 
 % ---------------------------------- TELA OPCOES VISUALIZAR PRODUTOS --------------------------------
