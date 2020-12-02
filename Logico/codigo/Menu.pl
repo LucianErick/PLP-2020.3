@@ -247,7 +247,6 @@ registerClientScreen() :-
     getString(Nome, 'Digite o nome do cliente'),
     getString(DataCadastro, 'Digite a data de cadastro do cliente'),
     cadastraCliente(Cpf, Nome, DataCadastro),
-    %- Cadastrar
     write('\nCliente cadastrado com sucesso!'),
     get_single_char(Action),
     employeeScreen(0).
@@ -305,7 +304,7 @@ productViewScreen(Cursor) :-
 productSymptomViewScreen() :-
     shell(clear),
     lerCsvRowList('SintomasProdutos.csv', SintomasProdutos),
-    mostraProdutosSintomas(SintomasProdutos),
+    % mostraProdutosSintomas(SintomasProdutos),
     get_single_char(Action),
     productViewScreen(0).
 
@@ -313,7 +312,7 @@ productSymptomViewScreen() :-
 productStockViewScreen() :-
     shell(clear),
     lerCsvRowList('Produtos.csv', Produtos),
-    mostraProdutosEstoque(Produtos),
+    % mostraProdutosEstoque(Produtos),
     get_single_char(Action),
     productViewScreen(0).
 

@@ -1,16 +1,16 @@
 :-use_module(library(csv)).
 :-include('Arquivos.pl').
-:-include('Clientes.pl')
+:-include('Cliente.pl').
 
-------------------------------CADASTRO-------------------------------------
+%------------------------------CADASTRO-------------------------------------
 
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
-    funcionarioExiste(Cpf)
+    funcionarioExiste(Cpf),
     open('../arquivos/Funcionarios.csv', append, File),
     writeln(File, (Nome,Cpf,DataAdmissao,Salario)),                 
     close(File).
 
-------------------------------VIEWENTRADA---------------------------------
+%------------------------------VIEW ENTRADA---------------------------------
 
 mostraColunasFuncionario:-
     write('------------------Funcionarios--------------\n'),
@@ -37,12 +37,12 @@ mostraFuncionarios(Funcionarios):-
     mostraLista(Funcionarios, 1).
 
 
---------------------------------ADICIONAVENDAS--------------------------------------
+%--------------------------------ADICIONA VENDAS--------------------------------------
 
 
 adicionaVenda(CpfFuncionario, IdProduto, CpfCliente):-
     produtoExiste(IdProduto),
-    clinteExite(CpfCliente),
+    clienteExiste(CpfCliente),
     funcionarioExiste(CpfFuncionario),
     open('../arquivos/ProdutosVenda.csv', append, File),
     writeln(File, (CpfFuncionario, IdProduto, CpfCliente)),                 
@@ -59,7 +59,7 @@ verificaProduto(ProdutoId, [H|T]) :-
     ;verificaProduto(ProdutoId, T)).
 
 
-----------------------------------VALIDAFUNCIONARIOEXISTE------------------------------------------
+%----------------------------------VALIDA FUNCIONARIO EXISTE-------------------------------
 
 funcionarioExiste(CpfFuncionario):-
     lerCsvRowList('../arquivos/Funcinarios.csv', Funcinarios),
@@ -71,7 +71,7 @@ verificaFuncionarios(SearchedCpf, [H|T]) :-
     ;verificaFuncionarios(SearchedCpf, T)).
 
 
--------------------------------------LEITURA---------------------------------------------
+%-------------------------------------LEITURA---------------------------------------------
 
 ler_arquivo(Result) :-
     open('../arquivos/Funcionarios.csv',read,Str),
