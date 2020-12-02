@@ -19,7 +19,7 @@ mostraListaClientes([H|T], Cpf, X):-
     write(X),
     write('. '),
     write(H), write('\n'),
-    (Next =:= 4 -> write('\nId dos produtos das compras do cliente:'), nl,nl, mostraProdutoCliente(Cpf)
+    (Next =:= 4 -> write('\nCompras do cliente:'), nl, mostraProdutoCliente(Cpf)
     ;write('')),
     mostraListaClientes(T, Cpf, Next).
 
@@ -85,12 +85,8 @@ mostraProdutoCliente(Cpf):-
     getCompras(Cpf, Compras),
     exclude(empty,Compras,Produtos),
     length(Produtos,Length),
-    (Length =:= 0 -> write('Sem produtos cadastrados!\n')
-    ; mostraIdsProdutos(Produtos), nl).
-
-mostraIdsProdutos([]):- write('').
-mostraIdsProdutos([Id|[]]):- write(Id), write('.'), nl.
-mostraIdsProdutos([Id|Resto]):- write(Id), write(' | '), mostraIdsProdutos(Resto).
+    (Length =:= 0 -> write('Sem produtos comprados!\n')
+; write(Length), write(' produtos comprados!\n')).
 
 
 getCompras(IdCliente, L):-
