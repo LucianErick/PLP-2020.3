@@ -6,10 +6,9 @@
 %----------------------------CADASTRO-----------------------------------
 
 cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
-    (funcionarioExiste(Cpf) -> false
-    ;open('../arquivos/Funcionarios.csv', append, File),
+    open('../arquivos/Funcionarios.csv', append, File),
     writeln(File, (Nome,Cpf,DataAdmissao, Salario)),                 
-    close(File)).
+    close(File).
 
 %---------------------------VISUALIZACAO----------------------------------
 mostraColunasFuncionarios:-
@@ -45,42 +44,12 @@ mostraFuncionarios(Funcionarios):-
     mostraArray(Funcionarios, 1).
 
 
-funcionarioExiste(CpfFuncionario):-
-    lerCsvRowList('Funcionarios.csv', Funcionarios),
-    verificaFuncionarios(CpfFuncionario, Funcionarios).
-
-verificaFuncionarios(_,[], false).
-verificaFuncionarios(SearchedCpf, [H|T]) :-
-    (member(SearchedCpf, H) -> true
-    ;verificaFuncionarios(SearchedCpf, T)).
-
 %--------------------------------VENDAS--------------------------------------
 
 adicionaVenda(CpfFuncionario, IdProduto, IdCliente, DataVenda):-
-    (produtoExiste(IdProduto), clienteExiste(IdCliente), funcionarioExiste(CpfFuncionario) -> false;
     open('../arquivos/ProdutosVenda.csv', append, File),
     writeln(File, (CpfFuncionario, IdProduto, IdCliente, DataVenda)),
-    close(File)).
-    
-%--------------------------VERIFICA CLIENTE/PRODUTO----------------------------
-
-produtoExiste(IdProduto):-
-    lerCsvRowList('Produtos.csv', Produtos),
-    verificaProduto(IdProduto, Produtos).
-
-verificaProduto(_,[], false).
-verificaProduto(ProdutoId, [H|T]) :-
-    (member(ProdutoId, H) -> true
-    ;verificaProduto(ProdutoId, T)).
-
-clienteExiste(CpfCliente):-
-    lerCsvRowList('Clientes.csv', Clientes),
-    verificaClientes(CpfCliente, Clientes).
-
-verificaClientes(_,[], false).
-verificaClientes(SearchedCpf, [H|T]) :-
-    (member(SearchedCpf, H) -> true
-    ;verificaClientes(SearchedCpf, T)).
+    close(File).
 
 %----------------------------------FILTRO------------------------------------------
 
