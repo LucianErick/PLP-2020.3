@@ -15,15 +15,20 @@ sintomasEmLista(StringSintomas, ListaSintomas) :-
     split_string(StringSintomas, '', ',', ListaSintomas).
 %--------------------------------------------------------------------------------
 mostraColunasDeEstoque:-
-    write('------------------Produtos------------------\n'),
-    write('1. Id, 2. Nome, 3. Preço, 4. Validade\n'),
-    write('--------------------------------------------\n').
-    
+    write('────────────────────────Produtos────────────────────────\n').
+    % write('|        1. Id, 2. Nome, 3. Preço, 4. Validade         |\n'),
+    % write('────────────────────────────────────────────────────────\n').
+
+caracteristicas(["| Id: ", "| Nome: ", "| Preço: ", "| Validade: "]).
+
+pegaCaracteristica(I, Caracteristica):-
+    caracteristicas(X), nth1(I, X, Caracteristica).
+   
 mostraListaProdutos([], _).
 mostraListaProdutos([H|T], X):-
     Next is X + 1,
-    write(X),
-    write('. '),
+    pegaCaracteristica(X, Caracteristica),
+    write(Caracteristica),
     write(H), write('\n'),
     mostraListaProdutos(T, Next).
 
@@ -31,7 +36,7 @@ mostraListaProdutos([H|T], X):-
 mostraListaProd([],_).
 mostraListaProd([H|T], X):-
     mostraListaProdutos(H, X),
-    write('--------------------------------------------\n'),
+    write('────────────────────────────────────────────────────────\n'),
     mostraListaProd(T,X).
 
 mostraProdutos(Produtos):-
@@ -41,15 +46,20 @@ mostraProdutos(Produtos):-
 %--------------------------------------------------------------------------------
 
 mostraColunasSintomas:-
-    write('------------------Visualização por Sintoma------------------\n'),
-    write('1. Id, 2. Sintomas\n'),
-    write('--------------------------------------------\n').
+    write('──────────────────Visualização por Sintoma──────────────────\n').
+    % write('|                    1. Id, 2. Sintomas                    |\n'),
+    % write('────────────────────────────────────────────────────────────\n').
     
+caracteristicas2(['| Id: ', '| Sintomas: ']).
+
+pegaCaracteristica2(I, Caracteristica):-
+    caracteristicas2(X), nth1(I, X, Caracteristica).
+
 mostraListaSintomaProduto([], _).
 mostraListaSintomaProduto([H|T], X):-
     Next is X + 1,
-    write(X),
-    write('. '),
+    pegaCaracteristica2(X, Caracteristica),
+    write(Caracteristica),
     write(H), write('\n'),
     mostraListaSintomaProduto(T, Next).
 
@@ -57,7 +67,7 @@ mostraListaSintomaProduto([H|T], X):-
 mostraListaSintoma([],_).
 mostraListaSintoma([H|T], X):-
     mostraListaSintomaProduto(H, X),
-    write('--------------------------------------------\n'),
+    write('────────────────────────────────────────────────────────────\n'),
     mostraListaSintoma(T,X).
 
 mostraSintomaProduto(SintomaProduto):-

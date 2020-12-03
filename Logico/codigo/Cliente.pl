@@ -9,17 +9,22 @@ cadastraCliente(Cpf, Nome, DataCadastro) :-
 
 
 mostraColunas:-
-    write('------------------Clientes------------------\n'),
-    write('1.Nome, 2. Cpf, 3. Data Cadastro.\n'),
-    write('--------------------------------------------\n').
+    write('──────────────────Clientes──────────────────\n').
+    % write('|     1.Nome, 2. Cpf, 3. Data Cadastro.    |\n'),
+    % write('────────────────────────────────────────────\n').
+
+caracteristicas(['| Nome: ', '| CPF: ', '| Data Cadastro: ']).
+
+pegaCaracteristica(I, Caracteristica):-
+    caracteristicas(X), nth1(I, X, Caracteristica).
     
 mostraListaClientes([],_ , _).
 mostraListaClientes([H|T], Cpf, X):-
     Next is X + 1,
-    write(X),
-    write('. '),
+    pegaCaracteristica(X, Caracteristica),
+    write(Caracteristica),
     write(H), write('\n'),
-    (Next =:= 4 -> write('\nCompras do cliente:'), nl, mostraProdutoCliente(Cpf)
+    (Next =:= 4 -> write('\n| Compras do cliente:'), nl, mostraProdutoCliente(Cpf)
     ;write('')),
     mostraListaClientes(T, Cpf, Next).
 
@@ -28,7 +33,7 @@ mostraLista([],_).
 mostraLista([H|T], X):-
     nth0(1, H, Cpf),
     mostraListaClientes(H, Cpf, X),
-    write('--------------------------------------------\n'),
+    write('────────────────────────────────────────────\n'),
     mostraLista(T,X).
 
 mostraClientes(Clientes):-
@@ -85,8 +90,8 @@ mostraProdutoCliente(Cpf):-
     getCompras(Cpf, Compras),
     exclude(empty,Compras,Produtos),
     length(Produtos,Length),
-    (Length =:= 0 -> write('Sem produtos comprados!\n')
-; write(Length), write(' produtos comprados!\n')).
+    (Length =:= 0 -> write('| Sem produtos comprados!\n')
+; write('| '), write(Length), write(' produtos comprados!\n')).
 
 
 getCompras(IdCliente, L):-
