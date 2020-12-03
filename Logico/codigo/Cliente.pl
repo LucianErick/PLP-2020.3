@@ -55,11 +55,10 @@ verificaClientes(SearchedCpf, [H|T]) :-
 /* ----------------- cadastrar compras ---------------- */
 
 adicionaCompra(IdCliente, IdProduto):-
-    produtoExiste(IdProduto),
-    clienteExiste(IdCliente),
+    (produtoExiste(IdProduto), clienteExiste(IdCliente) -> false;
     open('../arquivos/ComprasCliente.csv', append, File),
     writeln(File, (IdCliente, IdProduto)),
-    close(File).
+    close(File)).
     
 
 produtoExiste(IdProduto):-
