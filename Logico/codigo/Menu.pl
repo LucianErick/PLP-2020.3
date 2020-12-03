@@ -31,20 +31,6 @@ remotionExitAction(Mensagem, Resultado) :-
     (remotion(Input) -> Resultado is 1;
         Resultado is 0).
 
-switch([O|Os], Item, Pos, Cont, NewO) :-
-    (Pos =:= Cont -> NewO = [Item|Os];
-        Cont2 is Cont + 1, switch(Os, Item, Pos, Cont2, NewO2), NewO = [O|NewO2]).
-
-remove([], _, _, []).
-remove([O|Os], Pos, Cont, NewO) :-
-    (Pos =:= Cont -> NewO = Os;
-        Cont2 is Cont + 1, remove(Os, Pos, Cont2, NewO2), NewO = [O|NewO2]).
-
-add([], Item, Item).
-add([O|Os], Item, NewO) :-
-    add(Os, Item, NewO2),
-    NewO = [O|NewO2].
-
 showOptions([], _, _).
 showOptions([A|As], Cursor, Cursor) :- 
     write('-> '),

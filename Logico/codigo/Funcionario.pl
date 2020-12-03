@@ -104,7 +104,7 @@ mostraQTDVendasFuncionario(CpfFuncionario):-
 
 
 getVendas(CpfFuncionario, L):-
-    lerCsvRowList("ProdutosVendas.csv", Vendas),
+    lerCsvRowList('ProdutosVenda.csv', Vendas),
     filtrarCompras(CpfFuncionario, Vendas,R),
     exclude(empty, R, L).
 
