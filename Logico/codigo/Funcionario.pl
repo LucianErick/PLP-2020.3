@@ -13,17 +13,22 @@ cadastraFuncionario(Cpf, Nome, DataAdmissao, Salario) :-
 
 %---------------------------VISUALIZACAO----------------------------------
 mostraColunasFuncionarios:-
-    write('------------------Funcionarios------------------\n'),
-    write('1.Nome, 2. Cpf, 3. Data Admissão, 4.Salário, 5.QTD de Vendas.\n'),
-    write('--------------------------------------------\n').
+    write('┌────────────────────────Funcionarios──────────────────────────┐\n').
+    % write('|1.Nome, 2. Cpf, 3. Data Admissão, 4.Salário, 5.QTD de Vendas. |\n'),
+    % write('────────────────────────────────────────────────────────────────\n').
     
+caracteristicasFuncionarios(['││ Nome: ', '││ CPF: ', '││ Data Admissão: ', '││ Salário: ', '││ QTD de Vendas: ']).
+
+pegaCaracteristicaFuncionario(I, Caracteristica):-
+    caracteristicasFuncionarios(X), nth1(I, X, Caracteristica).
+
 mostraListaFuncionarios([],_ , _).
 mostraListaFuncionarios([H|T], CpfFuncionario, X):-
     Next is X + 1,
-    write(X),
-    write('. '),
+    pegaCaracteristicaFuncionario(X, Caracteristica),
+    write(Caracteristica),
     write(H), write('\n'),
-    (X =:= 4 -> write('\nVendas do funcionários:'), nl, mostraQTDVendasFuncionario(CpfFuncionario)
+    (X =:= 4 -> write('│\n│ Vendas do funcionários:'), nl, mostraQTDVendasFuncionario(CpfFuncionario)
     ;write('')),
     mostraListaFuncionarios(T, CpfFuncionario, Next).
 
@@ -32,7 +37,7 @@ mostraArray([],_).
 mostraArray([H|T], X):-
     nth0(1, H, CpfFuncionario),
     mostraListaFuncionarios(H, CpfFuncionario, X),
-    write('--------------------------------------------\n'),
+    write('├──────────────────────────────────────────────────────────────┤\n'),
     mostraArray(T,X).
 
 mostraFuncionarios(Funcionarios):-
@@ -99,8 +104,8 @@ mostraQTDVendasFuncionario(CpfFuncionario):-
     getVendas(CpfFuncionario, Vendas),
     exclude(empty,Vendas,Produtos),
     length(Produtos,Length),
-    (Length =:= 0 -> write('Sem produtos vendidos!\n')
-; write(Length), write(' produtos vendidos!\n')).
+    (Length =:= 0 -> write('│ Sem produtos vendidos!\n')
+; write('│ '), write(Length), write(' produtos vendidos!\n')).
 
 
 getVendas(CpfFuncionario, L):-
