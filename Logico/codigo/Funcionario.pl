@@ -60,7 +60,7 @@ adicionaVenda(CpfFuncionario, IdProduto, IdCliente, DataVenda):-
     produtoExiste(IdProduto),
     clienteExiste(IdCliente),
     funcionarioExiste(CpfFuncionario),
-    open('../arquivos/ComprasCliente.csv', append, File),
+    open('../arquivos/ProdutosVenda.csv', append, File),
     writeln(File, (CpfFuncionario, IdProduto, IdCliente, DataVenda)),
     close(File).
     
@@ -73,7 +73,7 @@ produtoExiste(IdProduto):-
 verificaProduto(_,[], false).
 verificaProduto(ProdutoId, [H|T]) :-
     (member(ProdutoId, H) -> true
-    ;verificaClientes(ProdutoId, T)).
+    ;verificaProduto(ProdutoId, T)).
 
 clienteExiste(CpfCliente):-
     lerCsvRowList('Clientes.csv', Clientes),

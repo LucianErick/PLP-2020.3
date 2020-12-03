@@ -215,9 +215,9 @@ employeeScreen(Cursor) :-
 registerSellScreen() :-
     shell(clear),
     getString(CpfFuncionario, 'Digite o cpf do funcionario'),
-    getString(CpfCliente, 'Digite o cpf do cliente'),
-    getString(DataVenda, 'Digite a data de cadastro do cliente'),
     getString(Produto, 'Digite o id do produto'),
+    getString(CpfCliente, 'Digite o cpf do cliente'),
+    getString(DataVenda, 'Digite a data da venda'),
 
     adicionaVenda(CpfFuncionario, IdProduto, CpfCliente, DataVenda),
 
