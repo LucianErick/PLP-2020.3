@@ -219,7 +219,7 @@ registerSellScreen() :-
     getString(CpfCliente, 'Digite o cpf do cliente'),
     getString(DataVenda, 'Digite a data da venda'),
 
-    adicionaVenda(CpfFuncionario, IdProduto, CpfCliente, DataVenda),
+    adicionaVenda(CpfFuncionario, Produto, CpfCliente, DataVenda),
 
     write('\nVenda cadastrada com sucesso!'),
     get_single_char(Action),

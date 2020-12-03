@@ -57,12 +57,10 @@ verificaFuncionarios(SearchedCpf, [H|T]) :-
 %--------------------------------VENDAS--------------------------------------
 
 adicionaVenda(CpfFuncionario, IdProduto, IdCliente, DataVenda):-
-    produtoExiste(IdProduto),
-    clienteExiste(IdCliente),
-    funcionarioExiste(CpfFuncionario),
+    (produtoExiste(IdProduto), clienteExiste(IdCliente), funcionarioExiste(CpfFuncionario) -> false;
     open('../arquivos/ProdutosVenda.csv', append, File),
     writeln(File, (CpfFuncionario, IdProduto, IdCliente, DataVenda)),
-    close(File).
+    close(File)).
     
 %--------------------------VERIFICA CLIENTE/PRODUTO----------------------------
 
