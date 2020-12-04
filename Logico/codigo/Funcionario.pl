@@ -114,3 +114,17 @@ mostraVendasFuncionario(CpfFuncionario):-
     write('├──────────────────────────────────────────────────────┤\n');
     mostraListaVenda(Vendas, 1)).
     % mostraListaVenda(Vendas, 1).
+
+
+% ----------------------------------VALIDAFUNCIONARIOEXISTE------------------------------------------
+
+%verifica se funcionario existe cadastrado, mas codigo demorado
+
+% funcionarioExiste(CpfFuncionario):-
+%     lerCsvRowList('../arquivos/Funcinarios.csv', Funcinarios),
+%     verificaFuncionarios(CpfFuncionario, Funcinarios).
+
+% verificaFuncionarios(_,[], false).
+% verificaFuncionarios(SearchedCpf, [H|T]) :-
+%     (member(SearchedCpf, H) -> true
+%     ;verificaFuncionarios(SearchedCpf, T)).
