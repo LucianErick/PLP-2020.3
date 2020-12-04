@@ -40,6 +40,19 @@ mostraClientes(Clientes):-
     mostraLista(Clientes, 1).
 
 
+% passado um cpf, verifica se ele esta na lista de clientes cadastradas
+clienteExiste(CpfCliente):-
+    lerCsvRowList('Clientes.csv', Clientes),
+    verificaNaLista(CpfCliente, Clientes).
+
+% verifica se o elemento procurado esta em uma lista porém o código se torna demorado
+% a medida que o arquivo de clientes cresce
+verificaNaLista(_,[], false).
+verificaNaLista(SearchedCpf, [H|T]) :-
+    (member(SearchedCpf, H) -> true
+    ;verificaNaLista(SearchedCpf, T)).
+
+
 /* ----------------- cadastrar compras ---------------- */
 
 adicionaCompra(IdCliente, IdProduto):-
