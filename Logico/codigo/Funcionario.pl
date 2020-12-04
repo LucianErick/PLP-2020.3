@@ -55,13 +55,13 @@ adicionaVenda(CpfFuncionario, IdProduto, IdCliente, DataVenda):-
 
 filtrarVendas(_, [], []).
 filtrarVendas(CpfFuncionario, [H|T], [X|D]):-
-    removeIfNotPresent(CpfFuncionario, H, X),
+    removeIfNotPresentV(CpfFuncionario, H, X),
     filtrarVendas(CpfFuncionario,T, D).
 
 
-removeIfNotPresent(_, [], []).
-removeIfNotPresent(CpfFuncionario, [CpfFuncionario,V|T], V).
-removeIfNotPresent(CpfFuncionario, [H|T], []).
+removeIfNotPresentV(_, [], []).
+removeIfNotPresentV(CpfFuncionario, [CpfFuncionario,V|T], [CpfFuncionario,V|T]).
+removeIfNotPresentV(CpfFuncionario, [H|T], []).
 
 empty([]).
 
@@ -77,6 +77,40 @@ mostraQTDVendasFuncionario(CpfFuncionario):-
 
 getVendas(CpfFuncionario, L):-
     lerCsvRowList('ProdutosVenda.csv', Vendas),
-    filtrarCompras(CpfFuncionario, Vendas,R),
+    filtrarVendas(CpfFuncionario, Vendas,R),
     exclude(empty, R, L).
 
+
+% -------------------- Visualização --------------------------
+
+mostraColunasVendasFuncionario:-
+    write('┌───────────────Visualização das Vendas────────────────┐\n').
+
+caracteristicasVendasFuncionario(['││ CPF Funcionario: ', '││ ID Produto: ', '││ CPF CLiente: ', '││ Data: ']).
+
+pegaCaracteristicaVendasFuncionario(I, Caracteristica):-
+    caracteristicasVendasFuncionario(X), nth1(I, X, Caracteristica).
+
+
+mostraListaVendas([], _).
+mostraListaVendas([H|T], X):-
+    Next is X + 1,
+    pegaCaracteristicaVendasFuncionario(X, Caracteristica),
+    write(Caracteristica),
+    write(H), write('\n'),
+    mostraListaVendas(T, Next).
+
+mostraListaVenda([],_).
+mostraListaVenda([H|T], X):-
+    mostraListaVendas(H, X),
+    write('├──────────────────────────────────────────────────────┤\n'),
+    mostraListaVenda(T,X).
+
+mostraVendasFuncionario(CpfFuncionario):-
+    mostraColunasVendasFuncionario,
+    getVendas(CpfFuncionario, Vendas),
+    length(Vendas, Length),
+    (Length = 0 -> write('│ Sem produtos vendidos!\n'),
+    write('├──────────────────────────────────────────────────────┤\n');
+    mostraListaVenda(Vendas, 1)).
+    % mostraListaVenda(Vendas, 1).

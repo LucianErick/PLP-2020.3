@@ -3,6 +3,7 @@
 :- include('Funcionario.pl').
 :- include('Produto.pl').
 :- include('Arquivos.pl').
+:- include('Venda.pl').
 
 
 /* -> FUNCOES UTEIS -- */
@@ -95,12 +96,23 @@ doMainScreen(Cursor, Action) :-
                        Cursor =:= 3 -> showExitMessage());
      mainScreen(Cursor)).
 
+menu('\nBEM VINDO À
+    \n░█████╗░░█████╗░██████╗░░█████╗░███╗░░██╗░█████╗░  ██████╗░██╗░░██╗░█████╗░██████╗░███╗░░░███╗
+██╔══██╗██╔══██╗██╔══██╗██╔══██╗████╗░██║██╔══██╗  ██╔══██╗██║░░██║██╔══██╗██╔══██╗████╗░████║
+██║░░╚═╝██║░░██║██████╔╝██║░░██║██╔██╗██║███████║  ██████╔╝███████║███████║██████╔╝██╔████╔██║
+██║░░██╗██║░░██║██╔══██╗██║░░██║██║╚████║██╔══██║  ██╔═══╝░██╔══██║██╔══██║██╔══██╗██║╚██╔╝██║
+╚█████╔╝╚█████╔╝██║░░██║╚█████╔╝██║░╚███║██║░░██║  ██║░░░░░██║░░██║██║░░██║██║░░██║██║░╚═╝░██║
+░╚════╝░░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░╚══╝╚═╝░░╚═╝  ╚═╝░░░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═╝
+╔══════════════════════════════╗
+║  (w,s) Para mover o cursor   ║
+║  (a) Para modificar a tela   ║
+║  (d) Para entrar nas opcoes  ║
+╚══════════════════════════════╝\n').
+
 mainScreen(Cursor) :-
     shell(clear),
-    writeln('\nBEM VINDO À CORONA PHARM!
-             \n|| (w,s) Para mover o cursor  ||'),
-    writeln('|| (a) Para modificar a tela  ||'),
-    writeln('|| (d) Para entrar nas opcoes ||\n'),
+    menu(X),
+    writeln(X),
     optionsMainScreen(ListaOpcoes),
     showOptions(ListaOpcoes, Cursor, 0),
     get_single_char(Action),
@@ -126,10 +138,8 @@ doMasterScreen(Cursor, Action) :-
 
 masterScreen(Cursor) :-
     shell(clear),
-    writeln('\nBEM VINDO À CORONA PHARM!
-                \n|| (w,s) Para mover o cursor  ||'),
-    writeln('|| (a) Para modificar a tela  ||'),
-    writeln('|| (d) Para entrar nas opcoes ||\n'),
+    menu(X),
+    writeln(X),
     optionsMasterScreen(ListaOpcoes),
     showOptions(ListaOpcoes, Cursor, 0),
     get_single_char(Action),
@@ -180,7 +190,7 @@ employeeViewScreen() :-
 sellViewScreen() :-
     shell(clear),
     lerCsvRowList('ProdutosVenda.csv', Vendas),
-    mostraProdutos(Vendas),
+    mostraVendas(Vendas),
     get_single_char(Action),
     productViewScreen(0).
 
@@ -203,10 +213,8 @@ doEmployeeScreen(Cursor, Action) :-
 
 employeeScreen(Cursor) :-
     shell(clear),
-    writeln('\nBEM VINDO À CORONA PHARM!
-                \n|| (w,s) Para mover o cursor  ||'),
-    writeln('|| (a) Para modificar a tela  ||'),
-    writeln('|| (d) Para entrar nas opcoes ||\n'),
+    menu(X),
+    writeln(X),
     optionsEmployeeScreen(ListaOpcoes),
     showOptions(ListaOpcoes, Cursor, 0),
     get_single_char(Action),
@@ -227,8 +235,8 @@ registerSellScreen() :-
 % ---------------------------------------- TELA VISUALIZAR SUAS PROPRIAS VENDAS --------------------------
 employeeOwnSellsScreen() :-
     shell(clear),
-    getString(CpfFuncionario, 'Digite o CPF do funcionário'),
-    mostraQTDVendasFuncionario(CpfFuncionario),
+    getInt(CpfFuncionario, 'Digite o CPF do funcionário'),
+    mostraVendasFuncionario(CpfFuncionario),
     get_single_char(Action),
     employeeScreen(0).
 
@@ -258,10 +266,8 @@ doClientScreen(Cursor, Action) :-
 
 clientScreen(Cursor) :-
     shell(clear),
-    writeln('\nBEM VINDO À CORONA PHARM!
-                \n|| (w,s) Para mover o cursor  ||'),
-    writeln('|| (a) Para modificar a tela  ||'),
-    writeln('|| (d) Para entrar nas opcoes ||\n'),
+    menu(X),
+    writeln(X),
     optionsClientScreen(ListaOpcoes),
     showOptions(ListaOpcoes, Cursor, 0),
     get_single_char(Action),
@@ -292,10 +298,8 @@ doProductViewScreen(Cursor, Action) :-
 
 productViewScreen(Cursor) :-
     shell(clear),
-    writeln('\nBEM VINDO À CORONA PHARM!
-                \n|| (w,s) Para mover o cursor  ||'),
-    writeln('|| (a) Para modificar a tela  ||'),
-    writeln('|| (d) Para entrar nas opcoes ||\n'),
+    menu(X),
+    writeln(X),
     optionsProductViewScreen(ListaOpcoes),
     showOptions(ListaOpcoes, Cursor, 0),
     get_single_char(Action),

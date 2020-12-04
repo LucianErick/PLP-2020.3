@@ -11,27 +11,27 @@ mostraColunasVendas:-
     % write('|     1.Cpf do funcionário | 2. Vendas.    |\n'),
     % write('────────────────────────────────────────────\n').
     
-caracteristicasVenda(['││ CPF: ', '││ Vendas: ']).
+caracteristicasVenda(['││ CPF Funcionario: ', '││ ID Produto: ', '││ CPF Cliente: ', '││ Data: ']).
 
 pegaCaracteristicaVenda(I, Caracteristica):-
     caracteristicasVenda(X), nth1(I, X, Caracteristica).
    
 
-mostraListaVendas([], _).
-mostraListaVendas([H|T], X):-
+mostraListaVendasGeral([], _).
+mostraListaVendasGeral([H|T], X):-
     Next is X + 1,
     pegaCaracteristicaVenda(X, Caracteristica),
     write(Caracteristica),
     write(H), write('\n'),
-    mostraListaVendas(T, Next).
+    mostraListaVendasGeral(T, Next).
 
 
-mostraLista([],_).
-mostraLista([H|T], X):-
-    mostraListaVendas(H, X),
+mostraListaVendaGeral([],_).
+mostraListaVendaGeral([H|T], X):-
+    mostraListaVendasGeral(H, X),
     write('├──────────────────────────────────────────┤\n'),
-    mostraLista(T,X).
+    mostraListaVendaGeral(T,X).
 
 mostraVendas(ProdutosVenda):-
     mostraColunasVendas,
-    mostraLista(ProdutosVenda, 1).
+    mostraListaVendaGeral(ProdutosVenda, 1).
